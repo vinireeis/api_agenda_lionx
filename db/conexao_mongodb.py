@@ -10,6 +10,8 @@ class BancoDeDadosMongo:
         self.consulta = self.database.posts
 
 
+banco_instancia = BancoDeDadosMongo()
+
 '''
 client = MongoClient(
     'mongodb+srv://vihreis:abc123456@clusterreis.jsyr2.mongodb.net/test')

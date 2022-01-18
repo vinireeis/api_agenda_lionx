@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_pydantic_spec import FlaskPydanticSpec
 from flask_restful import Api, Resource
 from pydantic import BaseModel
-from app.services import querys_service
+from services import querys_service
 from typing import List, Optional
 
 app = Flask(__name__)

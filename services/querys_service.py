@@ -1,5 +1,7 @@
 from uuid import uuid4
-from app import banco_instancia
+from db.conexao_mongodb import banco_instancia
+
+
 
 
 class ErroAoCadastrar(Exception):
