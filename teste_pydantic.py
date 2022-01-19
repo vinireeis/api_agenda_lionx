@@ -33,7 +33,7 @@ class Contato(BaseModel):
         return dados_contato
 
     @validator('email')
-    def valida_se_tem_arroba(cls, email_contato):
+    def tem_arroba_no_email(cls, email_contato):
         if '@' not in email_contato:
             raise ValueError('Não tem @ no email')
         return email_contato
