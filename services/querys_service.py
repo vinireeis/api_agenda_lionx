@@ -20,6 +20,7 @@ class ErroContatoNaoEncontrado(Exception):
 
 def cadastrar_um_contato(novo_contato):
     adciona_id_no_contato(novo_contato)
+    adciona_situacao_no_contato(novo_contato)
     try:
         banco_instancia.consulta.insert_one(novo_contato)
     except:
@@ -42,7 +43,7 @@ def consultar_todos_contatos():
 
 
 def consultar_contato_por_id(id):
-    consulta_contato = banco_instancia.consulta.find_one({"contato_id": id}, {"_id": 0})
+    consulta_contato = banco_instancia.consulta.find_one({"contato_id": id, 'situacao': 'ativo'}, {"_id": 0})
     if consulta_contato:
         return consulta_contato
     else:

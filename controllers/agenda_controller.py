@@ -40,10 +40,9 @@ class AgendaListarUmContato(Resource):
     def get(self, id):
         try:
             contato = querys_service.consultar_contato_por_id(id)
-            if (contato):
-                return contato, 200
+            return contato, 200
         except:
-            return "Contato não encontrado", 404
+            return "testeeeee", 404
 
 
 class AgendaCadastrarContato(Resource):

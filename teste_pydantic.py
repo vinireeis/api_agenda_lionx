@@ -4,7 +4,20 @@ import json
 
 class Telefone(BaseModel):
     numero: str
-    tipo: str
+    type: str
+
+    @validator('numero')
+    def telefone_maior_9_chars(cls, numero_contato):
+        if len(numero_contato) < 10:
+            raise ValueError('Número do telefone não tem todos os digitos')
+        return numero_contato
+
+    @validator('type')
+    def tem_tipo_correto(cls, tipo_contato):
+        tipos = ['residencial', 'comercial', 'celular']
+        if tipo_contato not in tipos:
+            raise ValueError('Tipo do contato inválido')
+        return tipo_contato
 
 
 class Contato(BaseModel):
@@ -14,7 +27,7 @@ class Contato(BaseModel):
     endereco: str
 
     @validator('*')
-    def valida_se_tem_valor_nas_chaves(cls, dados_contato):
+    def tem_valor_nas_chaves(cls, dados_contato):
         if not dados_contato:
             raise ValueError('Existe um ou mais campos não preenchidos')
         return dados_contato
@@ -25,10 +38,6 @@ class Contato(BaseModel):
             raise ValueError('Não tem @ no email')
         return email_contato
 
-    @validator('telefones')
-    def valida_telefone_maior_9_chars(cls, telefones_contato):
-        for telefone in telefones_contato:
-            print(telefone['numero'])
 
 # if __name__ == '__main__':
 #     dic2 = {'nome': 102030, 'email': 'teste123', 'endereco': 'teste123', 'telefone': [{'numero': '123123123', 'tipo': 'type1'}, {'numero': '123123123', 'tipo': 'type1'}]}
@@ -36,6 +45,6 @@ class Contato(BaseModel):
 #     contato1 = Contato(**dic2).json()
 #     print(contato1)
 
-    contato2 = json.loads(contato1)
-    print(type(contato2))
-    print(contato2)
+    # contato2 = json.loads(contato1)
+    # print(type(contato2))
+    # print(contato2)
