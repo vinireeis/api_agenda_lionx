@@ -2,7 +2,6 @@ from flask import Flask
 from flask_restful import Api
 from flask_pydantic_spec import FlaskPydanticSpec
 from controllers.agenda_controller import AgendaListarPorLetra, AgendaCadastrarContato, AgendaEditarContato, AgendaExcluirContato, AgendaListarTodos, AgendaListarUmContato, HelloWord
-from services.query_service import consultar_contato_por_letra
 
 
 app = Flask(__name__)

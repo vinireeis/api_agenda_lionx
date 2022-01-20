@@ -21,7 +21,7 @@ class AgendaListarTodos(Resource):
 
 
 class AgendaListarUmContato(Resource):
-    """EXIBIR UM CONTATO POR ID"""
+    """EXIBIR UM CONTATO POR ID - (ID É UMA STRING)"""
     def get(self, id):
         contato = query_service.consultar_contato_por_id(id)
         if contato:
@@ -33,8 +33,8 @@ class AgendaListarPorLetra(Resource):
     """BUSCAR CONTATO PELA PRIMEIRA LETRA DO NOME"""
     def get(self, letra):
         consulta_contatos = query_service.consultar_contato_por_letra(letra)
-        if consulta_contatos:
-            todos_contatos_com_letra = [contato for contato in consulta_contatos]
+        todos_contatos_com_letra = [contato for contato in consulta_contatos]
+        if todos_contatos_com_letra:
             return todos_contatos_com_letra
         else:
             return 'Nenhum contato encontrado', 404
@@ -49,7 +49,7 @@ class AgendaCadastrarContato(Resource):
 
 
 class AgendaEditarContato(Resource):
-    """EDITAR CONTATO POR ID"""
+    """EDITAR CONTATO POR ID - (ID É UMA STRING)"""
     def put(self, id):
         contato_editar = request.get_json()
         contato_editado = query_service.editar_um_contato(contato_editar, id)
@@ -60,7 +60,7 @@ class AgendaEditarContato(Resource):
 
 
 class AgendaExcluirContato(Resource):
-    """EXCLUIR CONTATO POR ID"""
+    """EXCLUIR CONTATO POR ID - (ID É UMA STRING)"""
     def delete(self, id):
         contato_excluir = query_service.remover_um_contato(id)
         if contato_excluir:
