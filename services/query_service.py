@@ -49,6 +49,8 @@ def editar_um_contato(contato_editado, id):
 
 def remover_um_contato(id):
     try:
-        banco_instancia.consulta.find_one_and_delete({"_id": id})
+        contato = banco_instancia.consulta.find_one({"contato_id": id, 'situacao': 'ativo'})
+        contato.update(situacao = 'desativado')
+        editar_um_contato(contato, id)
     except:
         raise ErroAoExcluir
