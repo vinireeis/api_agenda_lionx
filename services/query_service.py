@@ -1,6 +1,5 @@
-from uuid import uuid4
 from db.conexao_mongodb import banco_instancia
-
+from services.manipulate_data_service import adciona_id_no_contato, adciona_situacao_no_contato
 
 class ErroAoCadastrar(Exception):
     pass
@@ -25,16 +24,6 @@ def cadastrar_um_contato(novo_contato):
         banco_instancia.consulta.insert_one(novo_contato)
     except:
         raise ErroAoCadastrar
-
-
-def adciona_id_no_contato(novo_contato):
-    novo_contato['contato_id'] = str(uuid4())
-    return novo_contato
-
-
-def adciona_situacao_no_contato(novo_contato):
-    novo_contato['situacao'] = 'ativo'
-    return novo_contato
 
 
 def consultar_todos_contatos():
