@@ -28,22 +28,19 @@ def cadastrar_um_contato(novo_contato):
 
 
 def consultar_todos_contatos():
-    todos_contatos_mongodb = banco_instancia.consulta.find({}, {"_id": 0})
+    todos_contatos_mongodb = banco_instancia.consulta.find({}, {"_id": 0, "situacao": 0})
     return todos_contatos_mongodb
 
 
 def consultar_contato_por_id(id):
-    consulta_contato = banco_instancia.consulta.find_one({"contato_id": id, 'situacao': 'ativo'}, {"_id": 0})
-    # if consulta_contato:
+    consulta_contato = banco_instancia.consulta.find_one({"contato_id": id, 'situacao': 'ativo'}, {"_id": 0, "situacao": 0})
     return consulta_contato
-    # else:
-    #     raise ErroContatoNaoEncontrado
 
 
 def consultar_contato_por_letra(letra):
     print(letra)
     regex_busca_letras = {'$regex': f'^{letra}', '$options': 'i'}
-    contatos_com_letra = banco_instancia.consulta.find({'nome': regex_busca_letras, 'situacao': 'desativado'}, {'_id': 0})
+    contatos_com_letra = banco_instancia.consulta.find({'nome': regex_busca_letras, 'situacao': 'desativado'}, {'_id': 0, "situacao": 0})
     return contatos_com_letra
 
 
