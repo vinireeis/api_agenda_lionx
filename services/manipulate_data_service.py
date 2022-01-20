@@ -13,6 +13,5 @@ def adciona_situacao_no_contato(novo_contato):
 
 def desativa_contato(contato):
     if contato['situacao'] == 'ativo':
-        # contato['situacao'] = 'desativado'
         contato.update(situacao='desativado')
     return contato

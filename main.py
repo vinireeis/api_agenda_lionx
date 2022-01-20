@@ -1,6 +1,24 @@
-from controllers.agenda_controller import app
-from services.query_service import consultar_contato_por_id, cadastrar_um_contato, editar_um_contato, remover_um_contato
+from db.conexao_mongodb import BancoDeDadosMongo
+from flask import Flask
+from flask_restful import Api
+from flask_pydantic_spec import FlaskPydanticSpec
+from controllers.agenda_controller import AgendaBuscarPorLetra, AgendaCadastrarContato, AgendaEditarContato, AgendaExcluirContato, AgendaListarTodos, AgendaListarUmContato
 
+
+app = Flask(__name__)
+api = Api(app)
+
+banco_instancia = BancoDeDadosMongo()
+
+spec = FlaskPydanticSpec('flask', title='API_AGENDA_LIONX')
+spec.register(app)
+
+
+api.add_resource(AgendaBuscarPorLetra, '/contatos/<string:letra>')
+api.add_resource(AgendaListarUmContato, '/contato/<string:id>')
+api.add_resource(AgendaCadastrarContato, '/cadastrar-contato')
+api.add_resource(AgendaEditarContato, '/editar-contato/<string:id>')
+api.add_resource(AgendaExcluirContato, '/excluir-contato/<string:id>')
 
 if __name__ == '__main__':
     app.run(debug=True)

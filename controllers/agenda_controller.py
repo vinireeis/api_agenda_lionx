@@ -1,15 +1,6 @@
-from flask import Flask, request
-from flask_pydantic_spec import FlaskPydanticSpec
-from flask_restful import Api, Resource
+from flask import request
+from flask_restful import Resource
 from services import query_service
-from db.conexao_mongodb import BancoDeDadosMongo
-
-
-app = Flask(__name__)
-api = Api(app)
-banco_instancia = BancoDeDadosMongo()
-spec = FlaskPydanticSpec('flask', title='API_AGENDA_LIONX')
-spec.register(app)
 
 
 class HelloWord(Resource):
@@ -66,12 +57,3 @@ class AgendaBuscarPorLetra(Resource):
     """BUSCAR CONTATO PELA PRIMEIRA LETRA DO NOME"""
     def get(self, letra):
         pass
-
-
-api.add_resource(HelloWord, '/')
-api.add_resource(AgendaListarTodos, '/contatos')
-api.add_resource(AgendaBuscarPorLetra, '/contatos/<string:letra>')
-api.add_resource(AgendaListarUmContato, '/contato/<string:id>')
-api.add_resource(AgendaCadastrarContato, '/cadastrar-contato')
-api.add_resource(AgendaEditarContato, '/editar-contato/<string:id>')
-api.add_resource(AgendaExcluirContato, '/excluir-contato/<string:id>')
