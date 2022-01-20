@@ -62,7 +62,7 @@ class AgendaExcluirContato(Resource):
         return "Removido com sucesso", 200
 
 
-class AgendaBuscarPorTermo(Resource):
+class AgendaBuscarPorLetra(Resource):
     """BUSCAR CONTATO PELA PRIMEIRA LETRA DO NOME"""
     def get(self, letra):
         pass
@@ -70,7 +70,7 @@ class AgendaBuscarPorTermo(Resource):
 
 api.add_resource(HelloWord, '/')
 api.add_resource(AgendaListarTodos, '/contatos')
-api.add_resource(AgendaBuscarPorTermo, '/contatos/<string:termo>')
+api.add_resource(AgendaBuscarPorLetra, '/contatos/<string:letra>')
 api.add_resource(AgendaListarUmContato, '/contato/<string:id>')
 api.add_resource(AgendaCadastrarContato, '/cadastrar-contato')
 api.add_resource(AgendaEditarContato, '/editar-contato/<string:id>')
