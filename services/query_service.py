@@ -1,5 +1,8 @@
+from operator import contains
 from db.conexao_mongodb import banco_instancia
 from services.manipulate_data_service import adciona_id_no_contato, adciona_situacao_no_contato
+from pymongo import MongoClient
+
 
 class ErroAoCadastrar(Exception):
     pass
@@ -41,16 +44,13 @@ def consultar_contato_por_id(id):
 
 def editar_um_contato(contato_editado, id):
     try:
-        banco_instancia.consulta.find_one_and_replace({"contato_id": id},
-                                                      contato_editado)
+        banco_instancia.consulta.find_one_and_update({"contato_id": id}, {'$set': contato_editado})
     except:
         raise ErroAoEditar
 
 
 def remover_um_contato(id):
     try:
-        contato = banco_instancia.consulta.find_one({"contato_id": id, 'situacao': 'ativo'})
-        contato.update(situacao = 'desativado')
-        editar_um_contato(contato, id)
+        banco_instancia.consulta.find_one_and_update({"contato_id": id, 'situacao': 'ativo'}, {'$set': {'situacao': 'desativado'}})
     except:
         raise ErroAoExcluir

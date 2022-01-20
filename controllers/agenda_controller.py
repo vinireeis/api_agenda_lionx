@@ -1,12 +1,13 @@
 from flask import Flask, request
 from flask_pydantic_spec import FlaskPydanticSpec
 from flask_restful import Api, Resource
-from pydantic import BaseModel
 from services import query_service
-from typing import List, Optional
+from db.conexao_mongodb import BancoDeDadosMongo
+
 
 app = Flask(__name__)
 api = Api(app)
+banco_instancia = BancoDeDadosMongo()
 spec = FlaskPydanticSpec('flask', title='API_AGENDA_LIONX')
 spec.register(app)
 
@@ -25,7 +26,7 @@ class AgendaListarTodos(Resource):
         dic_todos_contatos = [contato for contato in todos_contatos_db]
         if (dic_todos_contatos):
             return dic_todos_contatos, 200
-        return 'Nenhum contato encontrado', 404
+        return 'Não há contatos ainda..'
 
 
 class AgendaListarUmContato(Resource):
@@ -35,7 +36,7 @@ class AgendaListarUmContato(Resource):
             contato = query_service.consultar_contato_por_id(id)
             return contato, 200
         except:
-            return "testeeeee", 404
+            return "Nao foi encontrado nenhum contato com essa ID", 404
 
 
 class AgendaCadastrarContato(Resource):
@@ -48,21 +49,23 @@ class AgendaCadastrarContato(Resource):
 
 class AgendaEditarContato(Resource):
     """EDITAR CONTATO POR ID"""
-    def put(contato_editado, id):
+    def put(self, id):
+        contato_editado = request.get_json()
         query_service.editar_um_contato(contato_editado, id)
         return "Contato editado com sucesso", 201
 
 
 class AgendaExcluirContato(Resource):
     """EXCLUIR CONTATO POR ID"""
-    def delete(id):
+    def delete(self, id):
         query_service.remover_um_contato(id)
         return "Removido com sucesso", 200
 
 
 class AgendaBuscarPorTermo(Resource):
-    """BUSCAR CONTATO POR NOME"""
-    pass
+    """BUSCAR CONTATO PELA PRIMEIRA LETRA DO NOME"""
+    def get(self, letra):
+        pass
 
 
 api.add_resource(HelloWord, '/')
