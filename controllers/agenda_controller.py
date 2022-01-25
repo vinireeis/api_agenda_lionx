@@ -23,17 +23,27 @@ class AgendaListarTodos(Resource):
         dic_todos_contatos = [contato for contato in todos_contatos_db]
         if (dic_todos_contatos):
             return dic_todos_contatos, 200
-        return 'Nenhum contato encontrado', 404
+        return 'Não há contatos ainda..', 200
 
 
 class AgendaListarUmContato(Resource):
-    """EXIBIR UM CONTATO POR ID"""
+    """EXIBIR UM CONTATO POR ID - (ID É UMA STRING)"""
     def get(self, id):
         try:
             contato = repository.consultar_contato_por_id(id)
             return contato, 200
-        except:
-            return "testeeeee", 404
+        return "Nao foi encontrado nenhum contato com esse ID", 200
+
+
+class AgendaListarPorLetra(Resource):
+    """BUSCAR CONTATO PELA PRIMEIRA LETRA DO NOME"""
+    def get(self, letra):
+        consulta_contatos = query_service.consultar_contato_por_letra(letra)
+        todos_contatos_com_letra = [contato for contato in consulta_contatos]
+        if todos_contatos_com_letra:
+            return todos_contatos_com_letra
+        else:
+            return 'Nenhum contato encontrado', 404
 
 
 class AgendaCadastrarContato(Resource):
@@ -45,28 +55,21 @@ class AgendaCadastrarContato(Resource):
 
 
 class AgendaEditarContato(Resource):
-    """EDITAR CONTATO POR ID"""
-    def put(contato_editado, id):
-        repository.editar_um_contato(contato_editado, id)
-        return "Contato editado com sucesso", 201
+    """EDITAR CONTATO POR ID - (ID É UMA STRING)"""
+    def put(self, id):
+        contato_editar = request.get_json()
+        contato_editado = query_service.editar_um_contato(contato_editar, id)
+        if contato_editado:
+            return "Contato editado com sucesso", 201
+        else:
+            return "Não foi possível editar o contato", 500
 
 
 class AgendaExcluirContato(Resource):
-    """EXCLUIR CONTATO POR ID"""
-    def delete(id):
-        repository.remover_um_contato(id)
-        return "Removido com sucesso", 200
-
-
-class AgendaBuscarPorTermo(Resource):
-    """BUSCAR CONTATO POR NOME"""
-    pass
-
-
-api.add_resource(HelloWord, '/')
-api.add_resource(AgendaListarTodos, '/contatos')
-api.add_resource(AgendaBuscarPorTermo, '/contatos/<string:termo>')
-api.add_resource(AgendaListarUmContato, '/contato/<string:id>')
-api.add_resource(AgendaCadastrarContato, '/cadastrar-contato')
-api.add_resource(AgendaEditarContato, '/editar-contato/<string:id>')
-api.add_resource(AgendaExcluirContato, '/excluir-contato/<string:id>')
+    """EXCLUIR CONTATO POR ID - (ID É UMA STRING)"""
+    def delete(self, id):
+        contato_excluir = query_service.remover_um_contato(id)
+        if contato_excluir:
+            return "Removido com sucesso", 200
+        else:
+            return 'Não é possível excluir, pois o contato não foi encontrado', 404

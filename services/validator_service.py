@@ -1,5 +1,6 @@
 from pydantic import BaseModel, validator
-import json
+
+
 class Telefone(BaseModel):
     numero: str
     type: str
