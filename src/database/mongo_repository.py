@@ -3,25 +3,29 @@ from database.connection.connect_config_mongodb import BancoDeDadosMongo
 banco = BancoDeDadosMongo.init_bd()
 
 
-def cadastrar_um_contato(novo_contato):
-    return banco.consulta.insert_one(novo_contato)
-
-
-def consultar_todos_contatos():
+def get_all_contacts():
     return banco.consulta.find({}, {"_id": 0})
 
 
-def consultar_contato_por_id(id):
-    return banco.consulta.find_one({"contato_id": id, 'situacao':
-                                    'ativo'}, {"_id": 0})
+def get_contact_by_id(id):
+    return banco.consulta.find_one({'contato_id': id, 'situacao':
+                                    'ativo'}, {'_id': 0})
 
 
-def editar_um_contato(contato_editado, id):
+def get_contacts_by_first_letter(letter):
+    return banco.consulta.find({'name': '$regex', '$options': '-i'}, {'_id': 0})
+
+
+def register_contact(novo_contato):
+    return banco.consulta.insert_one(novo_contato)
+
+
+def update_contact(contato_editado, id):
     return banco.consulta.update_one({"contato_id": id},
                                      contato_editado)
 
 
-def remover_um_contato(id):
+def soft_delete_contact(id):
     contato = banco.consulta.find_one({"contato_id": id, 'situacao': 'ativo'})
     contato.update(situacao='desativado')
-    return editar_um_contato(contato, id)
+    return update_contact(contato, id)

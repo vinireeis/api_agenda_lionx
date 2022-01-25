@@ -2,28 +2,28 @@ from typing import Optional
 from pydantic import BaseModel, validator
 
 
-class Telefone(BaseModel):
-    numero: str
+class Phone(BaseModel):
+    number: str
     type: str
 
-    @validator('numero')
-    def telefone_maior_9_chars(cls, numero_contato):
-        if len(numero_contato) < 10:
+    @validator('number')
+    def phone_greater_than_9_chars(cls, phone_number):
+        if len(phone_number) < 10:
             raise ValueError('Número do telefone não tem todos os digitos')
-        return numero_contato
+        return phone_number
 
     @validator('type')
-    def tem_tipo_correto(cls, tipo_contato):
-        tipos = ['residencial', 'comercial', 'celular']
-        if tipo_contato not in tipos:
+    def tem_tipo_correto(cls, phone_type):
+        types = ['residential', 'commercial', 'mobile']
+        if phone_type not in types:
             raise ValueError('Tipo do contato inválido')
-        return tipo_contato
+        return phone_type
 
 
-class Contato(BaseModel):
+class Contact(BaseModel):
     firstName: Optional[str]
     lastName: Optional[str]
-    telefones: list[Telefone]
+    phoneList: list[Phone]
     email: str
     endereco: str
 
