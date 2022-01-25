@@ -1,26 +1,26 @@
 from typing import Optional
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, Extra
 
 
-class Phone(BaseModel):
+class Phone(BaseModel, extra=Extra.forbid):
     number: str
     type: str
 
     @validator('number')
-    def phone_greater_than_9_chars(cls, phone_number):
+    def greater_than_9_chars(cls, phone_number):
         if len(phone_number) < 10:
             raise ValueError('Número do telefone não tem todos os digitos')
         return phone_number
 
     @validator('type')
-    def tem_tipo_correto(cls, phone_type):
+    def verify_type_phone(cls, phone_type):
         types = ['residential', 'commercial', 'mobile']
         if phone_type not in types:
             raise ValueError('Tipo do contato inválido')
         return phone_type
 
 
-class Contact(BaseModel):
+class Contact(BaseModel, extra=Extra.forbid):
     firstName: Optional[str]
     lastName: Optional[str]
     phoneList: list[Phone]
@@ -28,13 +28,13 @@ class Contact(BaseModel):
     endereco: str
 
     @validator('*')
-    def tem_valor_nas_chaves(cls, dados_contato):
+    def verify_values_in_keys(cls, dados_contato):
         if not dados_contato:
             raise ValueError('Existe um ou mais campos não preenchidos')
         return dados_contato
 
     @validator('email')
-    def tem_arroba_no_email(cls, email_contato):
+    def verify_email(cls, email_contato):
         if '@' not in email_contato:
             raise ValueError('Não tem @ no email')
         return email_contato

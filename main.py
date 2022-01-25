@@ -1,6 +1,6 @@
 from flask import Flask
 from src.resources.routes import init_api
-from src.resources.pydantic_api_specification import init_spec
+from resources.api_specifications import init_spec
 
 
 app = Flask(__name__)

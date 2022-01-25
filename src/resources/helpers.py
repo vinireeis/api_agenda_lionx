@@ -1,23 +1,23 @@
 from uuid import uuid4
 
 
-def adciona_id_no_contato(novo_contato):
+def add_contact_id(novo_contato):
     novo_contato['contato_id'] = str(uuid4())
     return novo_contato
 
 
-def adciona_situacao_no_contato(novo_contato):
+def add_activity_attr(novo_contato):
     novo_contato['situacao'] = 'ativo'
     return novo_contato
 
 
-def desativa_contato(contato):
+def deactivate_activity_attr(contato):
     if contato['situacao'] == 'ativo':
         contato.update(situacao='desativado')
     return contato
 
 
-def total_de_contatos_e_por_tipo(lista_contatos):
+def total_contacts_and_by_type(lista_contatos):
     total, total_residential, total_commercial, total_mobile = 0
     for contato in lista_contatos:
         total += 1
@@ -32,6 +32,6 @@ def total_de_contatos_e_por_tipo(lista_contatos):
     return dic_retorno
 
 
-def adciona_totais_no_dic_contato(contatos, dic_totais):
+def add_totals_in_contact_dict(contatos, dic_totais):
     contatos.update(dic_totais)
     return contatos

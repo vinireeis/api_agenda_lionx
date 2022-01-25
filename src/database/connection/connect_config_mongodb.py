@@ -12,6 +12,7 @@ class BancoDeDadosMongo:
     def init_bd():
         return BancoDeDadosMongo()
 
+
 '''
 client = MongoClient(
     'mongodb+srv://vihreis:abc123456@clusterreis.jsyr2.mongodb.net/test')
