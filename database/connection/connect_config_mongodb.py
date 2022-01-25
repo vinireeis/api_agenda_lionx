@@ -9,8 +9,8 @@ class BancoDeDadosMongo:
         self.collections = self.database['contatos']
         self.consulta = self.database.posts
 
-
-banco_instancia = BancoDeDadosMongo()
+    def init_bd():
+        return BancoDeDadosMongo()
 
 '''
 client = MongoClient(

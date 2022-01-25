@@ -1,9 +1,7 @@
 from flask import Flask, request
 from flask_pydantic_spec import FlaskPydanticSpec
 from flask_restful import Api, Resource
-from pydantic import BaseModel
-from services import query_service
-from typing import List, Optional
+from database import repository
 
 app = Flask(__name__)
 api = Api(app)
@@ -21,7 +19,7 @@ class AgendaListarTodos(Resource):
     """EXIBIR TODOS OS CONTATOS"""
     # @spec.validate(resp=Response(HTTP_200=Contato))
     def get(self):
-        todos_contatos_db = query_service.consultar_todos_contatos()
+        todos_contatos_db = repository.consultar_todos_contatos()
         dic_todos_contatos = [contato for contato in todos_contatos_db]
         if (dic_todos_contatos):
             return dic_todos_contatos, 200
@@ -32,7 +30,7 @@ class AgendaListarUmContato(Resource):
     """EXIBIR UM CONTATO POR ID"""
     def get(self, id):
         try:
-            contato = query_service.consultar_contato_por_id(id)
+            contato = repository.consultar_contato_por_id(id)
             return contato, 200
         except:
             return "testeeeee", 404
@@ -42,21 +40,21 @@ class AgendaCadastrarContato(Resource):
     """CADASTRAR CONTATO"""
     def post(self):
         novo_contato = request.get_json()
-        query_service.cadastrar_um_contato(novo_contato)
+        repository.cadastrar_um_contato(novo_contato)
         return "Cadastrado com sucesso", 201
 
 
 class AgendaEditarContato(Resource):
     """EDITAR CONTATO POR ID"""
     def put(contato_editado, id):
-        query_service.editar_um_contato(contato_editado, id)
+        repository.editar_um_contato(contato_editado, id)
         return "Contato editado com sucesso", 201
 
 
 class AgendaExcluirContato(Resource):
     """EXCLUIR CONTATO POR ID"""
     def delete(id):
-        query_service.remover_um_contato(id)
+        repository.remover_um_contato(id)
         return "Removido com sucesso", 200
 
 
