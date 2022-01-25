@@ -1,12 +1,14 @@
 from flask import Flask, request
 from flask_pydantic_spec import FlaskPydanticSpec
 from flask_restful import Api, Resource
-from database import repository
+from src.database.mongo_repository import BancoDeDadosMongo
+
 
 app = Flask(__name__)
 api = Api(app)
 spec = FlaskPydanticSpec('flask', title='API_AGENDA_LIONX')
 spec.register(app)
+banco = BancoDeDadosMongo().init_bd()
 
 
 class HelloWord(Resource):
@@ -29,9 +31,8 @@ class AgendaListarTodos(Resource):
 class AgendaListarUmContato(Resource):
     """EXIBIR UM CONTATO POR ID - (ID É UMA STRING)"""
     def get(self, id):
-        try:
-            contato = repository.consultar_contato_por_id(id)
-            return contato, 200
+        contato = repository.consultar_contato_por_id(id)
+        return contato, 200
         return "Nao foi encontrado nenhum contato com esse ID", 200
 
 
