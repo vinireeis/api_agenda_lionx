@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, validator
 
 
@@ -20,7 +21,8 @@ class Telefone(BaseModel):
 
 
 class Contato(BaseModel):
-    nome: str
+    firstName: Optional[str]
+    lastName: Optional[str]
     telefones: list[Telefone]
     email: str
     endereco: str
