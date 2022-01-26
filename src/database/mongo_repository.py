@@ -8,12 +8,14 @@ def get_all_contacts():
 
 
 def get_contact_by_id(id):
-    return banco.consulta.find_one({'contato_id': id, 'situacao':
+    return banco.consulta.find_one({'contact_id': id, 'situacion':
                                     'ativo'}, {'_id': 0})
 
 
 def get_contacts_by_first_letter(letter):
-    return banco.consulta.find({'name': '$regex', '$options': '-i'}, {'_id': 0})
+    regex_filter = {"$regex": f"^{letter}", "$options": "i"}
+    return banco.consulta.find({'name': regex_filter, 'situacion': 'ativo'},
+                               {'_id': 0})
 
 
 def register_contact(novo_contato):
@@ -21,11 +23,11 @@ def register_contact(novo_contato):
 
 
 def update_contact(contato_editado, id):
-    return banco.consulta.update_one({"contato_id": id},
+    return banco.consulta.update_one({"contact_id": id},
                                      contato_editado)
 
 
 def soft_delete_contact(id):
-    contato = banco.consulta.find_one({"contato_id": id, 'situacao': 'ativo'})
+    contato = banco.consulta.find_one({"contact_id": id, 'situacion': 'ativo'})
     contato.update(situacao='desativado')
     return update_contact(contato, id)

@@ -25,13 +25,13 @@ class Contact(BaseModel, extra=Extra.forbid):
     lastName: Optional[str]
     phoneList: list[Phone]
     email: str
-    endereco: str
+    address: str
 
-    @validator('*')
-    def verify_values_in_keys(cls, dados_contato):
-        if not dados_contato:
+    @validator('phoneList', 'email', 'address')
+    def verify_values_in_keys(cls, values):
+        if not values:
             raise ValueError('Existe um ou mais campos não preenchidos')
-        return dados_contato
+        return values
 
     @validator('email')
     def verify_email(cls, email_contato):
@@ -41,7 +41,7 @@ class Contact(BaseModel, extra=Extra.forbid):
 
 
 # if __name__ == '__main__':
-#     dic2 = {'nome': 102030, 'email': 'teste123', 'endereco': 'teste123', 'telefone': [{'numero': '123123123', 'tipo': 'type1'}, {'numero': '123123123', 'tipo': 'type1'}]}
+#     dic2 = {'nome': 102030, 'email': 'teste123', 'address': 'teste123', 'telefone': [{'numero': '123123123', 'tipo': 'type1'}, {'numero': '123123123', 'tipo': 'type1'}]}
 
 #     contato1 = Contato(**dic2).json()
 #     print(contato1)

@@ -14,9 +14,9 @@ class AgendaListarTodos(Resource):
     # @spec.validate(resp=Response(HTTP_200=Contato))
     def get(self):
         todos_contatos_db = mongo_repository.get_all_contacts()
-        dic_todos_contatos = [contato for contato in todos_contatos_db]
-        if (dic_todos_contatos):
-            return dic_todos_contatos, 200
+        list_todos_contatos = [contato for contato in todos_contatos_db]
+        if (list_todos_contatos):
+            return list_todos_contatos, 200
         return 'Não há contatos ainda..', 200
 
 
