@@ -1,3 +1,4 @@
+from xml.dom import NotFoundErr
 from src.database.connection.connect_config_mongodb import BancoDeDadosMongo
 
 banco = BancoDeDadosMongo.init_bd()
@@ -28,6 +29,12 @@ def update_contact(contato_editado, id):
 
 
 def soft_delete_contact(id):
-    contato = banco.consulta.find_one({"contact_id": id, 'situacion': 'ativo'})
-    contato.update(situacao='desativado')
-    return update_contact(contato, id)
+    try:
+        contato = get_contact_by_id(id)
+        print('-=' *30)
+        print(contato)
+        contato.update(situacion='desativado')
+        print(contato)
+        return update_contact(contato, id)
+    except:
+        raise NotFoundErr

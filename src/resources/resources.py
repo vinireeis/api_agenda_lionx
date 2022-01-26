@@ -66,11 +66,11 @@ class AgendaEditarContato(Resource):
 class AgendaExcluirContato(Resource):
     """EXCLUIR CONTATO POR ID - (ID É UMA STRING)"""
     def delete(self, id):
-        contato_excluir = mongo_repository.soft_delete_contact(id)
-        if contato_excluir:
+        try:
+            mongo_repository.soft_delete_contact(id)
             return "Removido com sucesso", 200
-        else:
-            return 'Não é possível excluir, pois o contato não foi encontrado', 404
+        except:
+            return 'Não é possível excluir, contato não foi encontrado', 404
 
 
 class AgendaCountPhonesByType(Resource):
