@@ -1,4 +1,4 @@
-from database.connection.connect_config_mongodb import BancoDeDadosMongo
+from src.database.connection.connect_config_mongodb import BancoDeDadosMongo
 
 banco = BancoDeDadosMongo.init_bd()
 
@@ -14,7 +14,7 @@ def get_contact_by_id(id):
 
 def get_contacts_by_first_letter(letter):
     regex_filter = {"$regex": f"^{letter}", "$options": "i"}
-    return banco.consulta.find({'name': regex_filter, 'situacion': 'ativo'},
+    return banco.consulta.find({'nome': regex_filter, 'situacion': 'ativo'},
                                {'_id': 0})
 
 
