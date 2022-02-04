@@ -14,7 +14,7 @@ class MongoRepository:
         return self.collection.find_one({'contact_id': id, 'situacion':
                                          'ativo'}, {'_id': 0})
 
-    def get_contacts_by_first_letter(self, letter):
+    def get_contacts_by_firsts_letters(self, letter):
         regex_filter = {"$regex": f"^{letter}", "$options": "i"}
         return self.collection.find({'nome': regex_filter,
                                      'situacion': 'ativo'}, {'_id': 0})

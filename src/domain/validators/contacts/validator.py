@@ -25,9 +25,9 @@ class Contact(BaseModel, extra=Extra.forbid):
     lastName: Optional[str]
     phoneList: list[Phone]
     email: str
-    address: str
+    address: Optional[str]
 
-    @validator('phoneList', 'email', 'address')
+    @validator('phoneList', 'email')
     def verify_values_in_keys(cls, values):
         if not values:
             raise ValueError('Existe um ou mais campos não preenchidos')

@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from src.repositories.mongo import repository
-from src.controllers 
+from src.services.schedule.contacts import ContactsService
 
 
 class HelloWord(Resource):
@@ -14,21 +14,13 @@ class AgendaListarTodos(Resource):
     """EXIBIR TODOS OS CONTATOS"""
     # @spec.validate(resp=Response(HTTP_200=Contato))
     def get(self):
-        todos_contatos_db = repository.get_all_contacts()
-        list_contacts = [contato for contato in todos_contatos_db]
-        if (list_contacts):
-            # dic_todos_contatos = helpers.add_total_contacts_by_type(list_contacts)
-            return list_contacts, 200
-        return 'Não há contatos ainda..', 200
+        return ContactsService.get_all()
 
 
 class AgendaListarUmContato(Resource):
     """EXIBIR UM CONTATO POR ID - (ID É UMA STRING)"""
     def get(self, id):
-        contato = repository.get_contact_by_id(id)
-        if contato:
-            return contato, 200
-        return "Nao foi encontrado nenhum contato com esse ID", 404
+        return ContactsService.get_by_id(id)
 
 
 class AgendaListarPorLetra(Resource):
