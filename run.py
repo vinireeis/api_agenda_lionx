@@ -1,6 +1,6 @@
 from flask import Flask
-from src.routers.routes import Routes
-from src.services.api_specifications import DocsSpecifications
+from src.routers.routes.route_assignature import Routes
+from services.docs.api_specifications import DocsSpecifications
 
 
 app = Flask(__name__)

@@ -1,4 +1,4 @@
-from infrastructures.connection_mongo.connector_mongodb import MongoDB
+from infrastructures.mongo.connection_mongodb import MongoDB
 
 instance_db = MongoDB()
 
@@ -9,13 +9,13 @@ def get_all_contacts():
 
 def get_contact_by_id(id):
     return instance_db.consulta.find_one({'contact_id': id, 'situacion':
-                                    'ativo'}, {'_id': 0})
+                                          'ativo'}, {'_id': 0})
 
 
 def get_contacts_by_first_letter(letter):
     regex_filter = {"$regex": f"^{letter}", "$options": "i"}
-    return instance_db.consulta.find({'nome': regex_filter, 'situacion': 'ativo'},
-                               {'_id': 0})
+    return instance_db.consulta.find({'nome': regex_filter,
+                                      'situacion': 'ativo'}, {'_id': 0})
 
 
 def register_contact(novo_contato):
@@ -23,8 +23,7 @@ def register_contact(novo_contato):
 
 
 def update_contact(contato_editado, id):
-    return instance_db.consulta.update_one({"contact_id": id},
-                                     contato_editado)
+    return instance_db.consulta.update_one({"contact_id": id}, contato_editado)
 
 
 def soft_delete_contact(id):

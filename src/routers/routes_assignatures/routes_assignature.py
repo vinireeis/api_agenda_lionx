@@ -3,6 +3,7 @@ from routers.schedule.router import AgendaCadastrarContato, AgendaCountPhonesByT
 
 
 class Routes:
+    @staticmethod
     def init_routes(app):
         api = Api(app)
         api.add_resource(HelloWord, '/')
