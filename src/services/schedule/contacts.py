@@ -3,12 +3,10 @@ from uuid import uuid4
 
 def add_contact_id(novo_contato):
     novo_contato['contact_id'] = str(uuid4())
-    return novo_contato
 
 
 def add_activity_attr(novo_contato):
     novo_contato['situaction'] = 'ativo'
-    return novo_contato
 
 
 def add_full_name(novo_contato):
@@ -18,7 +16,6 @@ def add_full_name(novo_contato):
 def deactivate_activity_attr(contato):
     if contato['situacion'] == 'ativo':
         contato.update(situacao='desativado')
-    return contato
 
 
 def add_total_contacts_by_type(lista_contatos):
@@ -50,4 +47,3 @@ if __name__ == '__main__':
     dic = add_total_contacts_by_type(lista_de_contatos)
 
     print(dic['totals'])
-    

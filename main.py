@@ -1,11 +1,11 @@
 from flask import Flask
-from src.routers.routes.route_assignature import Routes
+from src.routers.schedule.signature import RoutesSignature
 from services.docs.api_specifications import DocsSpecifications
 
 
 app = Flask(__name__)
 
-routes = Routes()
+routes = RoutesSignature()
 routes.init_routes(app)
 
 specs = DocsSpecifications()

@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource
-from repositories.mongo import repository
+from src.repositories.mongo import repository
+from src.controllers 
 
 
 class HelloWord(Resource):

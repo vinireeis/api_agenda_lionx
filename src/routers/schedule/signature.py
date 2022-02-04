@@ -2,7 +2,7 @@ from flask_restful import Api
 from routers.schedule.router import AgendaCadastrarContato, AgendaCountPhonesByType, AgendaEditarContato, AgendaExcluirContato, AgendaListarPorLetra, AgendaListarTodos, AgendaListarUmContato, HelloWord
 
 
-class Routes:
+class RoutesSignature:
     @staticmethod
     def init_routes(app):
         api = Api(app)
