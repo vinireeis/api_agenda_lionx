@@ -1,16 +1,13 @@
 from pymongo import MongoClient
 
 
-class BancoDeDadosMongo:
+class MongoDB:
     def __init__(self):
         self.client = MongoClient('mongodb+srv://vihreis:abc123456@clusterreis'
                                   '.jsyr2.mongodb.net/test')
         self.database = self.client['agenda']
         self.collections = self.database['contatos']
         self.consulta = self.database.posts
-
-    def init_bd():
-        return BancoDeDadosMongo()
 
 
 '''

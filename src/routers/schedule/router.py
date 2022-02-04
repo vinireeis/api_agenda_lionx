@@ -1,10 +1,7 @@
-from ast import Raise
-from xml.dom import NotFoundErr
 from flask import request
 from flask_restful import Resource
-from src.database import mongo_repository
-from src.resources import helpers
-from json import dumps
+from src.repositories import mongo_repository
+
 
 class HelloWord(Resource):
     """ESSA É A ROTA DE BOAS-VINDAS"""
