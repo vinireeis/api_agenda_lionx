@@ -43,8 +43,9 @@ class Contact(BaseModel, extra=Extra.forbid):
 # if __name__ == '__main__':
 #     dic2 = {'nome': 102030, 'email': 'teste123', 'address': 'teste123', 'telefone': [{'numero': '123123123', 'tipo': 'type1'}, {'numero': '123123123', 'tipo': 'type1'}]}
 
-#     contato1 = Contato(**dic2).json()
+#     contato1 = Contato(**dic2)
 #     print(contato1)
+
 
     # contato2 = json.loads(contato1)
     # print(type(contato2))

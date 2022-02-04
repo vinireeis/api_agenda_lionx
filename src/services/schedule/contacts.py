@@ -1,7 +1,6 @@
-from multiprocessing.sharedctypes import Value
 from uuid import uuid4
 from src.repositories.mongo.repository import MongoRepository
-
+from src.domain.validators.contacts import validator
 
 
 class ContactsService:
@@ -14,7 +13,7 @@ class ContactsService:
         contacts_db = MongoRepository().get_all_contacts()
         contacts_list = [contact for contact in contacts_db]
         if not contacts_list:
-            raise ValueError("Não há contatos")
+            return {[], 200}
         return contacts_list
 
     @staticmethod
@@ -31,6 +30,11 @@ class ContactsService:
         if not contacts_list:
             raise ValueError("Não há contatos")
         return contacts_list
+
+    @staticmethod
+    def register(contact):
+        validator.Contact(**contact)
+
 
     @staticmethod
     def add_contact_id(novo_contato):

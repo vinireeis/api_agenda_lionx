@@ -25,21 +25,15 @@ class AgendaListarUmContato(Resource):
 
 class AgendaListarPorLetra(Resource):
     """BUSCAR CONTATO PELA PRIMEIRA LETRA DO NOME"""
-    def get(self, letter):
-        all_contacts_letter = repository.get_contacts_by_first_letter(letter)
-        list_all_contacts_letter = [contato for contato in all_contacts_letter]
-        if list_all_contacts_letter:
-            return list_all_contacts_letter, 200
-        else:
-            return 'Nenhum contato encontrado', 404
+    def get(self, letters):
+        return ContactsService.get_by_letters(letters)
 
 
 class AgendaCadastrarContato(Resource):
     """CADASTRAR CONTATO"""
     def post(self):
-        novo_contato = request.get_json()
-        repository.register_contact(novo_contato)
-        return "Cadastrado com sucesso", 201
+        new_contact = request.get_json()
+        return ContactsService.register(new_contact)
 
 
 class AgendaEditarContato(Resource):
