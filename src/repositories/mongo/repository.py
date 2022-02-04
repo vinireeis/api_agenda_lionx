@@ -1,35 +1,31 @@
-from infrastructures.mongo.connection_mongodb import MongoDB
-
-instance_db = MongoDB()
+from infrastructures.mongo.mongo_infrastructure import MongoInfrastrucutre
 
 
-def get_all_contacts():
-    return instance_db.consulta.find({}, {"_id": 0})
+class MongoRepository:
+    def __init__(self, database_url, collection_name):
+        self.mongo_client = MongoInfrastrucutre.get_client()
+        self.database = self.mongo_client.get_database(database_url)
+        self.collection = self.database.get_collection(collection_name)
 
+    def get_all_contacts(self):
+        return self.collection.find({}, {"_id": 0})
 
-def get_contact_by_id(id):
-    return instance_db.consulta.find_one({'contact_id': id, 'situacion':
-                                          'ativo'}, {'_id': 0})
+    def get_contact_by_id(self, id):
+        return self.collection.find_one({'contact_id': id, 'situacion':
+                                         'ativo'}, {'_id': 0})
 
+    def get_contacts_by_first_letter(self, letter):
+        regex_filter = {"$regex": f"^{letter}", "$options": "i"}
+        return self.collection.find({'nome': regex_filter,
+                                     'situacion': 'ativo'}, {'_id': 0})
 
-def get_contacts_by_first_letter(letter):
-    regex_filter = {"$regex": f"^{letter}", "$options": "i"}
-    return instance_db.consulta.find({'nome': regex_filter,
-                                      'situacion': 'ativo'}, {'_id': 0})
+    def register_contact(self, novo_contato):
+        return self.collection.insert_one(novo_contato)
 
+    def update_contact(self, contato_editado, id):
+        return self.collection.update_one({"contact_id": id}, contato_editado)
 
-def register_contact(novo_contato):
-    return instance_db.consulta.insert_one(novo_contato)
-
-
-def update_contact(contato_editado, id):
-    return instance_db.consulta.update_one({"contact_id": id}, contato_editado)
-
-
-def soft_delete_contact(id):
-    try:
-        contato = get_contact_by_id(id)
+    def soft_delete_contact(self, id):
+        contato = self.get_contact_by_id(id)
         contato.update(situacion='desativado')
-        return update_contact(contato, id)
-    except:
-        raise ValueError
+        return self.update_contact(contato, id)
