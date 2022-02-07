@@ -2,14 +2,14 @@ from pymongo import MongoClient
 from decouple import config
 
 
-class MongoInfrastrucutre:
+class MongoInfrastructure:
     client = None
 
     @staticmethod
     def get_client():
-        if MongoInfrastrucutre.client is None:
-            MongoInfrastrucutre.client = MongoClient(config('MONGO_CONNECTION'))
-        return MongoInfrastrucutre.client
+        if MongoInfrastructure.client is None:
+            MongoInfrastructure.client = MongoClient(config('MONGO_CONNECTION'))
+        return MongoInfrastructure.client
 
 
 '''
