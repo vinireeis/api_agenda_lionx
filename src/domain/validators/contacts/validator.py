@@ -40,6 +40,11 @@ class Contact(BaseModel, extra=Extra.forbid):
         return email_contato
 
 
+class ContactValidate:
+    def __init__(self, contact_data):
+        self.contact = Contact(**contact_data)
+
+
 # if __name__ == '__main__':
 #     dic2 = {'nome': 102030, 'email': 'teste123', 'address': 'teste123', 'telefone': [{'numero': '123123123', 'tipo': 'type1'}, {'numero': '123123123', 'tipo': 'type1'}]}
 
