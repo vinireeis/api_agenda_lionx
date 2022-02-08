@@ -5,7 +5,7 @@ from decouple import config
 class MongoInfrastructure:
     client = None
 
-    @staticmethod
+    @classmethod
     def get_client():
         if MongoInfrastructure.client is None:
             MongoInfrastructure.client = MongoClient(config('MONGO_CONNECTION'))
