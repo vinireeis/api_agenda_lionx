@@ -1,0 +1,55 @@
+include:
+- func/*
+kind: ArchiveUploadSpec
+name: func-tWDF
+
+---
+apiVersion: fission.io/v1
+kind: Package
+metadata:
+  creationTimestamp: null
+  name: get-ticker-2c9470f0-caf4-4567-90b0-614a7323d786
+  namespace: default
+spec:
+  deployment:
+    checksum: {}
+  environment:
+    name: get-ticker
+    namespace: default
+  source:
+    checksum: {}
+    type: url
+    url: archive://func-tWDF
+status:
+  buildstatus: pending
+  lastUpdateTimestamp: "2022-02-10T17:00:23Z"
+
+---
+apiVersion: fission.io/v1
+kind: Function
+metadata:
+  creationTimestamp: null
+  name: get-ticker
+  namespace: default
+spec:
+  InvokeStrategy:
+    ExecutionStrategy:
+      ExecutorType: poolmgr
+      MaxScale: 0
+      MinScale: 0
+      SpecializationTimeout: 120
+      TargetCPUPercent: 0
+    StrategyType: execution
+  concurrency: 500
+  environment:
+    name: get-ticker
+    namespace: default
+  functionTimeout: 60
+  idletimeout: 120
+  package:
+    functionName: main.get_ticker_visual_identity
+    packageref:
+      name: get-ticker-2c9470f0-caf4-4567-90b0-614a7323d786
+      namespace: default
+  requestsPerPod: 1
+  resources: {}
