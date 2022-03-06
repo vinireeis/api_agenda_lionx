@@ -1,11 +1,13 @@
-from infrastructures.mongo.mongo_infrastructure import MongoInfrastrucutre
+from src.infrastructures.mongo.mongo_infrastructure import MongoInfrastructure
+
+from decouple import config
 
 
 class MongoRepository:
-    def __init__(self, database_url, collection_name):
-        self.mongo_client = MongoInfrastrucutre.get_client()
-        self.database = self.mongo_client.get_database(database_url)
-        self.collection = self.database.get_collection(collection_name)
+    def __init__(self):
+        self.mongo_client = MongoInfrastructure.get_client()
+        self.database = self.mongo_client.get_database(config('DATABASE'))
+        self.collection = self.database.get_collection(config('COLLECTION_NAME'))
 
     def get_all_contacts(self):
         return self.collection.find({}, {"_id": 0})
