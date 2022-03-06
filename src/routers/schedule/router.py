@@ -1,7 +1,8 @@
-from flask import request
-from flask_restful import Resource
 from src.repositories.mongo import repository
 from src.services.schedule.contacts import ContactsService
+
+from flask import request
+from flask_restful import Resource
 
 
 class HelloWord(Resource):
@@ -53,7 +54,7 @@ class AgendaExcluirContato(Resource):
         try:
             repository.soft_delete_contact(id)
             return "Removido com sucesso", 200
-        except:
+        except Exception:
             return 'Não é possível excluir, contato não foi encontrado', 404
 
 

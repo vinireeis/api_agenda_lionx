@@ -1,0 +1,4 @@
+{
+  "workbench.colorTheme": "Default Dark+",
+  "python.formatting.provider": "black"
+}

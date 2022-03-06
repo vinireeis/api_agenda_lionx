@@ -1,5 +1,5 @@
-from typing import Optional
 from pydantic import BaseModel, validator, Extra
+from typing import List, Optional
 
 
 class Phone(BaseModel, extra=Extra.forbid):
@@ -23,14 +23,14 @@ class Phone(BaseModel, extra=Extra.forbid):
 class Contact(BaseModel, extra=Extra.forbid):
     firstName: Optional[str]
     lastName: Optional[str]
-    phoneList: list[Phone]
+    phoneList: List[Phone]
     email: str
     address: Optional[str]
 
     @validator('phoneList', 'email')
     def verify_values_in_keys(cls, values):
         if not values:
-            raise ValueError('Existe um ou mais campos não preenchidos')
+            raise ValueError('One or more values empty')
         return values
 
     @validator('email')
@@ -46,7 +46,7 @@ class ContactValidate:
 
 
 # if __name__ == '__main__':
-#     dic2 = {'nome': 102030, 'email': 'teste123', 'address': 'teste123', 'telefone': [{'numero': '123123123', 'tipo': 'type1'}, {'numero': '123123123', 'tipo': 'type1'}]}
+#     dic2 = {'firstName': 102030, 'email': 'teste123', 'address': 'teste123', 'phoneList': [{'number': '123123123', 'type': 'type1'}, {'number': '123123123', 'type': 'type1'}]}
 
 #     contato1 = Contato(**dic2)
 #     print(contato1)
