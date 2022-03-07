@@ -26,8 +26,8 @@ class MongoRepository:
         )
         return zero_or_more_contacts
 
-    def register_contact(self, novo_contato):
-        self.collection.insert_one(novo_contato)
+    def register_contact(self, new_contact):
+        self.collection.insert_one(new_contact)
 
     def update_contact(self, contato_editado, id):
         self.collection.update_one({"contact_id": id}, contato_editado)
