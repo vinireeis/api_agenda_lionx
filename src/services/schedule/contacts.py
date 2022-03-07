@@ -1,7 +1,6 @@
 from src.repositories.mongo.repository import MongoRepository
 from src.domain.validators.contacts import validator
 
-
 from uuid import uuid4
 
 
