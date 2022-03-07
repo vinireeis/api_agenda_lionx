@@ -47,11 +47,11 @@ class AgendaCadastrarContato(Resource):
                 dumps(response),
                 mimetype="application/json",
                 status=201
-            )
+                )
         except Exception as error:
             response = {
-                "message": str(error),
-            }
+                "message": str(error)
+                }
             return Response(
                 dumps(response),
                 mimetype="application/json",
