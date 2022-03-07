@@ -1,9 +1,12 @@
-from uuid import uuid4
 from src.repositories.mongo.repository import MongoRepository
 from src.domain.validators.contacts import validator
 
 
+from uuid import uuid4
+
+
 class ContactsService:
+
     @staticmethod
     def to_list(object_contacts):
         return [contact for contact in object_contacts]
@@ -20,7 +23,7 @@ class ContactsService:
     def get_by_id(id):
         contact_db = MongoRepository().get_contact_by_id(id)
         if not contact_db:
-            raise ValueError("Contato não encontrado")
+            raise Exception("Contact not found.")
         return contact_db
 
     @staticmethod
@@ -28,29 +31,29 @@ class ContactsService:
         contacts_db = MongoRepository().get_contacts_by_firsts_letters(letters)
         contacts_list = [contact for contact in contacts_db]
         if not contacts_list:
-            raise ValueError("Não há contatos")
+            raise Exception("Contact not found.")
         return contacts_list
 
-    @staticmethod
-    def register(contact):
-        validator.Contact(**contact)
+    def register(self, new_contact):
+        contact_validated = validator.Contact.validate_basemodel(new_contact)
+        self._add_contact_id(contact_validated)
+        self._add_activity_attr(contact_validated)
+        MongoRepository().register_contact(contact_validated)
+        return {'response': 'contact created'}
 
     @staticmethod
-    def add_contact_id(novo_contato):
-        novo_contato["contact_id"] = str(uuid4())
+    def _add_contact_id(contact_validated):
+        print(contact_validated)
+        contact_validated.update(contact_id=str(uuid4()))
 
     @staticmethod
-    def add_activity_attr(novo_contato):
-        novo_contato["situaction"] = "ativo"
+    def _add_activity_attr(contact_validated):
+        contact_validated.update(situation="active")
 
     @staticmethod
-    def add_full_name(novo_contato):
-        novo_contato["name"] = f"{novo_contato['firstName'], novo_contato['lastName']}"
-
-    @staticmethod
-    def deactivate_activity_attr(contato):
-        if contato["situacion"] == "ativo":
-            contato.update(situacao="desativado")
+    def _deactivate_activity_attr(contato):
+        if contato["situacion"] == "active":
+            contato.update(situacao="deactivated")
 
     @staticmethod
     def add_total_contacts_by_type(lista_contatos):
