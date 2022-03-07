@@ -44,7 +44,7 @@ class Contact(BaseModel, extra=Extra.forbid):
             raise ValueError("One or more values empty")
         return values
 
-    def validate_unpacking(contact_data):
+    def validate_basemodel(contact_data):
         contact = Contact(**contact_data).dict()
         return contact
 
