@@ -14,29 +14,31 @@ class HelloWord(Resource):
         return "OLA MUNDOOO"
 
 
-class AgendaListarTodos(Resource):
+class ListAllContacts(Resource):
     """EXIBIR TODOS OS CONTATOS"""
 
     # @spec.validate(resp=Response(HTTP_200=Contato))
     def get(self):
-        return ContactsService.get_all()
+        contacts = ContactsService().get_all()
+        return contacts
 
 
-class AgendaListarUmContato(Resource):
+class ListContactById(Resource):
     """EXIBIR UM CONTATO POR ID - (ID É UMA STRING)"""
 
     def get(self, id):
+
         return ContactsService.get_by_id(id)
 
 
-class AgendaListarPorLetra(Resource):
+class ListContactsByLetters(Resource):
     """BUSCAR CONTATO PELA PRIMEIRA LETRA DO NOME"""
 
     def get(self, letters):
-        return ContactsService.get_by_letters(letters)
+        return ContactsService().get_by_letters(letters)
 
 
-class AgendaCadastrarContato(Resource):
+class RegisterContact(Resource):
     """CADASTRAR CONTATO"""
 
     def post(self):
@@ -59,7 +61,7 @@ class AgendaCadastrarContato(Resource):
                 )
 
 
-class AgendaEditarContato(Resource):
+class EditContact(Resource):
     """EDITAR CONTATO POR ID - (ID É UMA STRING)"""
 
     def put(self, id):
@@ -71,7 +73,7 @@ class AgendaEditarContato(Resource):
             return "Não foi possível editar o contato", 500
 
 
-class AgendaExcluirContato(Resource):
+class SoftDeleteContact(Resource):
     """EXCLUIR CONTATO POR ID - (ID É UMA STRING)"""
 
     def delete(self, id):
@@ -82,6 +84,6 @@ class AgendaExcluirContato(Resource):
             return "Não é possível excluir, contato não foi encontrado", 404
 
 
-class AgendaCountPhonesByType(Resource):
+class CountPhonesByType(Resource):
     def get():
-        pass
+        ...

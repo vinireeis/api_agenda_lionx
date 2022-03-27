@@ -19,7 +19,7 @@ class MongoRepository:
         )
         return contact
 
-    def get_contacts_by_firsts_letters(self, letter):
+    def get_contacts_by_first_letters(self, letter):
         regex_filter = {"$regex": f"^{letter}", "$options": "i"}
         zero_or_more_contacts = self.collection.find(
             {"nome": regex_filter, "situacion": "ativo"}, {"_id": 0}
@@ -29,10 +29,10 @@ class MongoRepository:
     def register_contact(self, new_contact):
         self.collection.insert_one(new_contact)
 
-    def update_contact(self, contato_editado, id):
-        self.collection.update_one({"contact_id": id}, contato_editado)
+    def update_contact(self, edit_contact, id):
+        self.collection.update_one({"contact_id": id}, edit_contact)
 
     def soft_delete_contact(self, id):
-        contato = self.get_contact_by_id(id)
-        contato.update(situacion="desativado")
-        self.update_contact(contato, id)
+        contact = self.get_contact_by_id(id)
+        contact.update(situacion="desativado")
+        self.update_contact(contact, id)

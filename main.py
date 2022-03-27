@@ -1,5 +1,6 @@
 from src.routers.schedule.signature import RoutesSignature
-from src.services.docs.api_specifications import DocsSpecifications
+from docs.api_specifications import DocsSpecifications
+
 
 from flask import Flask
 

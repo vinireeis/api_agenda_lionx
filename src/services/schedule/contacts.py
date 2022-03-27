@@ -7,13 +7,12 @@ from uuid import uuid4
 class ContactsService:
 
     @staticmethod
-    def to_list(object_contacts):
+    def _to_list(object_contacts):
         return [contact for contact in object_contacts]
 
-    @staticmethod
-    def get_all():
+    def get_all(self):
         contacts_db = MongoRepository().get_all_contacts()
-        contacts_list = [contact for contact in contacts_db]
+        contacts_list = self._to_list(contacts_db)
         if not contacts_list:
             return {[], 200}
         return contacts_list
@@ -25,10 +24,9 @@ class ContactsService:
             raise Exception("Contact not found.")
         return contact_db
 
-    @staticmethod
-    def get_by_letters(letters):
-        contacts_db = MongoRepository().get_contacts_by_firsts_letters(letters)
-        contacts_list = [contact for contact in contacts_db]
+    def get_by_letters(self, letters):
+        contacts_db = MongoRepository().get_contacts_by_first_letters(letters)
+        contacts_list = self._to_list(contacts_db)
         if not contacts_list:
             raise Exception("Contact not found.")
         return contacts_list
@@ -42,7 +40,6 @@ class ContactsService:
 
     @staticmethod
     def _add_contact_id(contact_validated):
-        print(contact_validated)
         contact_validated.update(contact_id=str(uuid4()))
 
     @staticmethod
