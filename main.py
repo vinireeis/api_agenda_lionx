@@ -1,7 +1,6 @@
 from src.routers.schedule.signature import RoutesSignature
 from docs.api_specifications import DocsSpecifications
 
-
 from flask import Flask
 
 app = Flask(__name__)

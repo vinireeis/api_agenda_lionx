@@ -8,7 +8,7 @@ class Phone(BaseModel, extra=Extra.forbid):
     type: str
 
     @validator("number")
-    def validate_and_format_numer(number):
+    def validate_number_format(number) -> str:
         regex = r"[\D]"
         subst = ""
         result_number = sub(regex, subst, number, 0, MULTILINE)
@@ -17,7 +17,7 @@ class Phone(BaseModel, extra=Extra.forbid):
         return result_number
 
     @validator("type")
-    def verify_type_phone(cls, phone_type):
+    def verify_phone_type(cls, phone_type):
         types = ["residential", "commercial", "mobile"]
         if phone_type not in types:
             raise ValueError("Invalid phone type")
@@ -32,8 +32,8 @@ class Contact(BaseModel, extra=Extra.forbid):
     address: Optional[str]
 
     @validator("email")
-    def email_is_true(email):
-        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    def email_is_true(email) -> str:
+        regex = r'^[a-z0-9]+[\._-]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
         if not search(regex, email):
             raise ValueError("Invalid email")
         return email
@@ -44,8 +44,8 @@ class Contact(BaseModel, extra=Extra.forbid):
             raise ValueError("One or more values empty")
         return values
 
-    def validate_basemodel(contact_data):
-        contact = Contact(**contact_data).dict()
+    def to_unpacking_at_base_model(contact_json) -> dict:
+        contact = Contact(**contact_json).dict()
         return contact
 
 

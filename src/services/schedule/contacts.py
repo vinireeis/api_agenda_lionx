@@ -7,36 +7,27 @@ from uuid import uuid4
 class ContactsService:
 
     @staticmethod
-    def _to_list(object_contacts):
-        return [contact for contact in object_contacts]
+    def _to_list(contacts) -> list:
+        return [contact for contact in contacts]
 
-    def get_all(self):
-        contacts_db = MongoRepository().get_all_contacts()
-        contacts_list = self._to_list(contacts_db)
-        if not contacts_list:
-            return {[], 200}
-        return contacts_list
+    def get_all(self) -> dict:
+        contacts_mongo_object = MongoRepository().get_all_contacts()
+        contacts_list = self._to_list(contacts_mongo_object)
+        return {"contacts": contacts_list}
 
     @staticmethod
-    def get_by_id(id):
+    def get_by_id(id) -> dict:
         contact_db = MongoRepository().get_contact_by_id(id)
         if not contact_db:
             raise Exception("Contact not found.")
         return contact_db
 
-    def get_by_letters(self, letters):
-        contacts_db = MongoRepository().get_contacts_by_first_letters(letters)
+    def get_by_letters(self, letters) -> dict:
+        contacts_db = MongoRepository().get_contacts_by_first_letters(letters=letters)
         contacts_list = self._to_list(contacts_db)
         if not contacts_list:
             raise Exception("Contact not found.")
-        return contacts_list
-
-    def register(self, new_contact):
-        contact_validated = validator.Contact.validate_basemodel(new_contact)
-        self._add_contact_id(contact_validated)
-        self._add_activity_attr(contact_validated)
-        MongoRepository().register_contact(contact_validated)
-        return {'response': 'contact created'}
+        return {"contacts": contacts_list}
 
     @staticmethod
     def _add_contact_id(contact_validated):
@@ -46,9 +37,23 @@ class ContactsService:
     def _add_activity_attr(contact_validated):
         contact_validated.update(situation="active")
 
+    def register(self, new_contact) -> dict:
+        contact_validated = validator.Contact.to_unpacking_at_base_model(contact_json=new_contact)
+        self._add_contact_id(contact_validated)
+        self._add_activity_attr(contact_validated)
+        MongoRepository().register_contact(contact_validated)
+        response = {'message': 'Contact successfully created'}
+        return response
+
+    def update(self, changed_contact, id):
+        contact_validated = validator.Contact.to_unpacking_at_base_model(changed_contact)
+        MongoRepository().update_contact(edit_contact=contact_validated, id=id)
+        response = {"message": "Contact successfully updated"}
+        return response
+
     @staticmethod
     def _deactivate_activity_attr(contato):
-        if contato["situacion"] == "active":
+        if contato["situacion"] == "active": 
             contato.update(situacao="deactivated")
 
     @staticmethod

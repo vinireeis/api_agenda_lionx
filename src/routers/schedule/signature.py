@@ -18,7 +18,7 @@ class RoutesSignature:
         api = Api(app)
         api.add_resource(HelloWord, "/")
         api.add_resource(ListAllContacts, "/contacts")
-        api.add_resource(ListContactsByLetters, "/contacts/<string:letter>")
+        api.add_resource(ListContactsByLetters, "/contacts/<string:letters>")
         api.add_resource(ListContactById, "/contact/<string:id>")
         api.add_resource(RegisterContact, "/register")
         api.add_resource(EditContact, "/edit/<string:id>")
