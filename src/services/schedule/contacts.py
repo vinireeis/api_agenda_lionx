@@ -47,9 +47,10 @@ class ContactsService:
         response = {'message': 'Contact successfully created'}
         return response
 
-    def update(self, changed_contact, id):
-        contact_validated = validator.Contact.to_unpacking_at_base_model(changed_contact)
-        MongoRepository().update_contact(edit_contact=contact_validated, id=id)
+    def update(self, edited_contact, id):
+        contact_exists = ContactsService().get_by_id(id)
+        contact_validated = validator.Contact.to_unpacking_at_base_model(edited_contact)
+        MongoRepository().update_contact(edited_contact=contact_validated, id=id)
         response = {"message": "Contact successfully updated"}
         return response
 

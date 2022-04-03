@@ -31,8 +31,8 @@ class MongoRepository:
     def register_contact(self, new_contact):
         self.collection.insert_one(new_contact)
 
-    def update_contact(self, edit_contact, id):
-        self.collection.update_one({"contact_id": id}, edit_contact)
+    def update_contact(self, edited_contact, id):
+        self.collection.update_one({"contact_id": id}, {"$set": edited_contact})
 
     def soft_delete_contact(self, id) -> dict:
         contact = self.get_contact_by_id(id)

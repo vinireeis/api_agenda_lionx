@@ -74,7 +74,7 @@ class RegisterContact(Resource):
             new_contact = request.get_json()
             response = ContactsService().register(new_contact)
             return Response(
-                dumps(response), mimetype='application/json', status=201
+                dumps(response), mimetype='application/json', status=200
             )
         except Exception as error:
             response = f'message: {str(error)}'
@@ -87,12 +87,17 @@ class EditContact(Resource):
     """EDITAR CONTATO POR ID - (ID É UMA STRING)"""
 
     def put(self, id):
-        contact_to_edit = request.get_json()
-        edited_contact = ContactsService().update_contact(contact_to_edit, id)
-        if edited_contact:
-            return 'Contato editado com sucesso', 201
-        else:
-            return 'Não foi possível editar o contato', 500
+        try:
+            contact_to_edit = request.get_json()
+            response = ContactsService().update(contact_to_edit, id)
+            return Response(
+                    dumps(response), mimetype='application/json', status=200
+                )
+        except Exception as error:
+            response = f'message: {str(error)}'
+            return Response(
+                dumps(response), mimetype='application/json', status=403
+            )
 
 
 class SoftDeleteContact(Resource):
