@@ -1,3 +1,4 @@
+# Third party
 from decouple import config
 from pymongo import MongoClient
 

@@ -1,6 +1,7 @@
-from sqlite3 import Cursor
+# Api Agenda Lionx
 from src.infrastructures.mongo.mongo_infrastructure import MongoInfrastructure
 
+# Third party
 from decouple import config
 
 

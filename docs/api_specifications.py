@@ -1,3 +1,4 @@
+# Third party
 from flask_pydantic_spec import FlaskPydanticSpec
 
 

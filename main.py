@@ -1,6 +1,8 @@
+# Api Agenda Lionx
 from src.routers.schedule.signature import RoutesSignature
 from docs.api_specifications import DocsSpecifications
 
+# Third party
 from flask import Flask
 
 app = Flask(__name__)

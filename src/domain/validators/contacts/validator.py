@@ -1,4 +1,7 @@
+# Third party
 from pydantic import BaseModel, Extra, validator
+
+# Standards
 from re import MULTILINE, search, sub
 from typing import List, Optional
 

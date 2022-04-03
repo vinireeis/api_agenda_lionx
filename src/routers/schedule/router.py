@@ -1,8 +1,12 @@
+# Api Agenda Lionx
 from src.repositories.mongo import repository
 from src.services.schedule.contacts import ContactsService
 
+# Third party
 from flask import request, Response
 from flask_restful import Resource
+
+# Standards
 from json import dumps
 
 
