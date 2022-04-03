@@ -20,7 +20,7 @@ class Phone(BaseModel, extra=Extra.forbid):
         return result_number
 
     @validator("type")
-    def verify_phone_type(cls, phone_type):
+    def verify_phone_type(phone_type):
         types = ["residential", "commercial", "mobile"]
         if phone_type not in types:
             raise ValueError("Invalid phone type")
@@ -42,7 +42,7 @@ class Contact(BaseModel, extra=Extra.forbid):
         return email
 
     @validator("phoneList", "email", "firstName")
-    def verify_values_in_keys(cls, values):
+    def verify_values_in_keys(values):
         if not values:
             raise ValueError("One or more values empty")
         return values
