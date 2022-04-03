@@ -48,23 +48,30 @@ class ContactsService:
         return response
 
     def update(self, edited_contact, id):
-        contact_exists = ContactsService().get_by_id(id)
+        contact_exists = self.get_by_id(id=id)
         contact_validated = validator.Contact.to_unpacking_at_base_model(edited_contact)
         MongoRepository().update_contact(edited_contact=contact_validated, id=id)
         response = {"message": "Contact successfully updated"}
         return response
 
-    @staticmethod
-    def _deactivate_activity_attr(contato):
-        if contato["situacion"] == "active": 
-            contato.update(situacao="deactivated")
+    def soft_delete(self, id):
+        contact_to_delete = self.get_by_id(id=id)
+        MongoRepository().soft_delete_contact(id=id)
+        contact_to_delete.update(situation="deactivated")
+        response = {"message": "Contact successfully deleted"}
+        return response
 
     @staticmethod
-    def add_total_contacts_by_type(lista_contatos):
+    def _deactivate_activity_attr(contact):
+        if contact["situation"] == "active":
+            contact.update(situation="deactivated")
+
+    @staticmethod
+    def add_total_contacts_by_type(contacts_list):
         total = total_residential = total_commercial = total_mobile = 0
-        for contato in lista_contatos:
+        for contact in contacts_list:
             # for phone in contato['phoneList']:
-            for phone in contato["telefones"]:
+            for phone in contact["phoneList"]:
                 total += 1
                 if phone["type"] == "residential":
                     total_residential += 1
@@ -72,16 +79,15 @@ class ContactsService:
                     total_commercial += 1
                 else:
                     total_mobile += 1
-            dic_retorno = {
+            response = {
                 "totals": {
-                    "total": total,
+                    "total contacts": total,
                     "totalCommercial": total_commercial,
                     "totalMobile": total_mobile,
                     "totalResidential": total_residential,
-                },
-                "contacts": lista_contatos,
+                }
             }
-        return dic_retorno
+            return response
 
 
 def add_totals_in_contact_dict(contatos, dic_totais):
