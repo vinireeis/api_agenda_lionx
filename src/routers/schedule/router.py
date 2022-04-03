@@ -14,7 +14,8 @@ class HelloWord(Resource):
     """ESSA É A ROTA DE BOAS-VINDAS"""
 
     def get(self):
-        return 'OLA MUNDOOO'
+        response = 'OLA MUNDOOO'
+        return response
 
 
 class ListAllContacts(Resource):
@@ -23,15 +24,17 @@ class ListAllContacts(Resource):
     # @spec.validate(resp=Response(HTTP_200=Contato))
     def get(self):
         try:
-            response = ContactsService().get_all()
-            return Response(
-                dumps(response), mimetype='application/json', status=200
+            response_service = ContactsService().get_all()
+            response = Response(
+                dumps(response_service), mimetype='application/json', status=200
             )
+            return response
         except Exception as error:
-            response = f'message: {str(error)}'
-            return Response(
-                dumps(response), mimetype='application/json', status=403
+            error_message = f'message: {str(error)}'
+            response = Response(
+                dumps(error_message), mimetype='application/json', status=403
             )
+        return response
 
 
 class ListContactById(Resource):
@@ -39,15 +42,17 @@ class ListContactById(Resource):
 
     def get(self, id):
         try:
-            response = ContactsService.get_by_id(id)
-            return Response(
-                dumps(response), mimetype='application/json', status=200
+            response_service = ContactsService.get_by_id(id)
+            response = Response(
+                dumps(response_service), mimetype='application/json', status=200
             )
+            return response
         except Exception as error:
-            response = f'message: {str(error)}'
-            return Response(
-                dumps(response), mimetype='application/json', status=403
+            error_message = f'message: {str(error)}'
+            response = Response(
+                dumps(error_message), mimetype='application/json', status=403
             )
+        return response
 
 
 class ListContactsByLetters(Resource):
@@ -55,15 +60,17 @@ class ListContactsByLetters(Resource):
 
     def get(self, letters):
         try:
-            response = ContactsService().get_by_letters(letters)
-            return Response(
-                dumps(response), mimetype='application/json', status=200
+            response_service = ContactsService().get_by_letters(letters)
+            response = Response(
+                dumps(response_service), mimetype='application/json', status=200
             )
+            return response
         except Exception as error:
-            response = f'message: {str(error)}'
-            return Response(
-                dumps(response), mimetype='application/json', status=403
+            error_message = f'message: {str(error)}'
+            response = Response(
+                dumps(error_message), mimetype='application/json', status=403
             )
+            return response
 
 
 class RegisterContact(Resource):
@@ -72,15 +79,17 @@ class RegisterContact(Resource):
     def post(self):
         try:
             new_contact = request.get_json()
-            response = ContactsService().register(new_contact)
-            return Response(
-                dumps(response), mimetype='application/json', status=200
+            response_service = ContactsService().register(new_contact)
+            response = Response(
+                dumps(response_service), mimetype='application/json', status=200
             )
+            return response
         except Exception as error:
-            response = f'message: {str(error)}'
-            return Response(
-                dumps(response), mimetype='application/json', status=403
+            error_message = f'message: {str(error)}'
+            response =Response(
+                dumps(error_message), mimetype='application/json', status=403
             )
+            return response
 
 
 class EditContact(Resource):
@@ -89,15 +98,17 @@ class EditContact(Resource):
     def put(self, id):
         try:
             contact_to_edit = request.get_json()
-            response = ContactsService().update(contact_to_edit, id)
-            return Response(
-                    dumps(response), mimetype='application/json', status=200
+            response_service = ContactsService().update(contact_to_edit, id)
+            response = Response(
+                    dumps(response_service), mimetype='application/json', status=200
                 )
+            return response
         except Exception as error:
-            response = f'message: {str(error)}'
-            return Response(
-                dumps(response), mimetype='application/json', status=403
+            error_message = f'message: {str(error)}'
+            response = Response(
+                dumps(error_message), mimetype='application/json', status=403
             )
+            return response
 
 
 class SoftDeleteContact(Resource):
@@ -105,10 +116,17 @@ class SoftDeleteContact(Resource):
 
     def delete(self, id):
         try:
-            repository.soft_delete_contact(id)
-            return 'Removido com sucesso', 200
-        except Exception:
-            return 'Não é possível excluir, contato não foi encontrado', 404
+            response_service = ContactsService().soft_delete(id)
+            response = Response(
+                    dumps(response_service), mimetype='application/json', status=200
+                )
+            return response
+        except Exception as error:
+            message = f'message: {str(error)}'
+            response = Response(
+                dumps(message), mimetype='application/json', status=403
+            )
+            return response
 
 
 class CountPhonesByType(Resource):
