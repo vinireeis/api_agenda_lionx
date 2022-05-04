@@ -21,7 +21,6 @@ class HelloWord(Resource):
 class ListAllContacts(Resource):
     """EXIBIR TODOS OS CONTATOS"""
 
-    # @spec.validate(resp=Response(HTTP_200=Contato))
     def get(self):
         try:
             response_service = ContactsService().get_all()
