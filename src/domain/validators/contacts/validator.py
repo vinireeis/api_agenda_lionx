@@ -50,18 +50,3 @@ class Contact(BaseModel, extra=Extra.forbid):
     def to_unpacking_at_base_model(contact_json) -> dict:
         contact = Contact(**contact_json).dict()
         return contact
-
-
-# if __name__ == "__main__":
-#     dic2 = {
-#         "firstName": "Vinicius Reis",
-#         "email": "teste@123.com",
-#         "address": "Rua logo ali 123",
-#         "phoneList": [
-#             {"number": "11952945737", "type": "commercial"},
-#             {"number": "1126467579", "type": "commercial"},
-#         ],
-#     }
-
-#     contato1 = Contact.validate_unpacking(dic2)
-#     print(contato1)

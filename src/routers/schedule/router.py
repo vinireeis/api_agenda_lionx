@@ -29,8 +29,8 @@ class ListAllContacts(Resource):
                 dumps(response_service), mimetype='application/json', status=200
             )
             return response
-        except Exception as error:
-            error_message = f'message: {str(error)}'
+        except Exception as ex:
+            error_message = f'message: {str(ex)}'
             response = Response(
                 dumps(error_message), mimetype='application/json', status=403
             )
@@ -130,5 +130,5 @@ class SoftDeleteContact(Resource):
 
 
 class CountPhonesByType(Resource):
-    def get():
+    def get(self):
         ...
