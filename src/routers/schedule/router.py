@@ -1,14 +1,12 @@
 # Api Agenda Lionx
-from src.repositories.mongo import repository
 from src.services.schedule.contacts import ContactsService
-
-# Third party
-from flask import request, Response
-from flask_restful import Resource
 
 # Standards
 from json import dumps
 
+# Third party
+from flask import request, Response
+from flask_restful import Resource
 
 class HelloWord(Resource):
     """ESSA É A ROTA DE BOAS-VINDAS"""
@@ -23,7 +21,7 @@ class ListAllContacts(Resource):
 
     def get(self):
         try:
-            response_service = ContactsService().get_all()
+            response_service = ContactsService.get_all()
             response = Response(
                 dumps(response_service), mimetype='application/json', status=200
             )
@@ -59,7 +57,7 @@ class ListContactsByLetters(Resource):
 
     def get(self, letters):
         try:
-            response_service = ContactsService().get_by_letters(letters)
+            response_service = ContactsService.get_by_letters(letters)
             response = Response(
                 dumps(response_service), mimetype='application/json', status=200
             )
@@ -78,7 +76,7 @@ class RegisterContact(Resource):
     def post(self):
         try:
             new_contact = request.get_json()
-            response_service = ContactsService().register(new_contact)
+            response_service = ContactsService.register(new_contact)
             response = Response(
                 dumps(response_service), mimetype='application/json', status=200
             )
@@ -97,13 +95,13 @@ class EditContact(Resource):
     def put(self, id):
         try:
             contact_to_edit = request.get_json()
-            response_service = ContactsService().update(contact_to_edit, id)
+            response_service = ContactsService.update(contact_to_edit, id)
             response = Response(
                     dumps(response_service), mimetype='application/json', status=200
                 )
             return response
-        except Exception as error:
-            error_message = f'message: {str(error)}'
+        except Exception as ex:
+            error_message = f'message: {str(ex)}'
             response = Response(
                 dumps(error_message), mimetype='application/json', status=403
             )
@@ -115,15 +113,15 @@ class SoftDeleteContact(Resource):
 
     def delete(self, id):
         try:
-            response_service = ContactsService().soft_delete(id)
+            response_service = ContactsService.soft_delete(id)
             response = Response(
                     dumps(response_service), mimetype='application/json', status=200
                 )
             return response
-        except Exception as error:
-            message = f'message: {str(error)}'
+        except Exception as ex:
+            message = f'message: unexpected error occurred'
             response = Response(
-                dumps(message), mimetype='application/json', status=403
+                dumps(message), mimetype='application/json', status=500
             )
             return response
 
