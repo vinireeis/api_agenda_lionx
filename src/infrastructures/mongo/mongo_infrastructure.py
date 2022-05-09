@@ -19,5 +19,5 @@ class MongoInfrastructure:
                 MongoInfrastructure.client = MongoClient(config('MONGO_CONNECTION'))
                 return MongoInfrastructure.client
             except Exception as ex:
-                log.error(msg="Error on get mongo infrastructure client", exc_info=ex)
+                log.error(msg="Error on get mongo infrastructure client", error=ex)
                 raise ex
