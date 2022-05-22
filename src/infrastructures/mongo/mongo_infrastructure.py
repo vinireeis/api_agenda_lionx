@@ -14,10 +14,13 @@ class MongoInfrastructure:
     @classmethod
     def get_client(cls):
 
-        if MongoInfrastructure.client is None:
+        if cls.client is None:
             try:
-                MongoInfrastructure.client = MongoClient(config('MONGO_CONNECTION'))
-                return MongoInfrastructure.client
+                cls.client = MongoClient(config('MONGO_URL_CONNECTION'))
             except Exception as ex:
-                log.error(msg="Error on get mongo infrastructure client", error=ex)
+                log.error(
+                    msg="Error on get mongo infrastructure client",
+                    error=ex
+                    )
                 raise ex
+        return cls.client

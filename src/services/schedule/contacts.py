@@ -1,73 +1,69 @@
 # Api Agenda Lionx
+from src.domain.exceptions.exceptions import NoRecordsFound
 from src.repositories.mongo.repository import MongoRepository
+from src.repositories.redis.repository import RedisRepository
 from src.domain.validators.contacts import validator
-
-# Third party
-from uuid import uuid4
 
 
 class ContactsService:
 
     @staticmethod
     def _to_list(contacts) -> list:
-        return [contact for contact in contacts]
+        contacts_list = {
+            "contacts": [contact for contact in contacts]
+            }
+        return contacts_list
 
     @staticmethod
     def get_all() -> dict:
-        contacts_mongo_object = MongoRepository().get_all_contacts()
+        result = RedisRepository.get_all()
+        if result:
+            contacts_list = eval(result)
+            return contacts_list
+        contacts_mongo_object = MongoRepository.get_all_active_contacts()
         contacts_list = ContactsService._to_list(contacts_mongo_object)
-        return {"contacts": contacts_list}
+        return contacts_list
+
+    @staticmethod
+    def get_all_in_db() -> dict:
+        contacts_mongo_object = MongoRepository.get_all_contacts()
+        contacts_list = ContactsService._to_list(contacts_mongo_object)
+        return contacts_list
 
     @staticmethod
     def get_by_id(id) -> dict:
-        contact_db = MongoRepository().get_contact_by_id(id)
+        contact_db = MongoRepository.get_contact_by_id(id)
         if not contact_db:
-            raise Exception("Contact not found.")
+            raise NoRecordsFound
         return contact_db
 
     @staticmethod
     def get_by_letters(letters) -> dict:
-        contacts_db = MongoRepository().get_contacts_by_first_letters(letters=letters)
+        contacts_db = MongoRepository.get_contacts_by_first_letters(letters=letters)
         contacts_list = ContactsService._to_list(contacts_db)
         if not contacts_list:
-            raise Exception("Contact not found.")
-        return {"contacts": contacts_list}
-
-    @staticmethod
-    def _add_contact_id(contact_validated):
-        contact_validated.update(contact_id=str(uuid4()))
-
-    @staticmethod
-    def _add_activity_attr(contact_validated):
-        contact_validated.update(situation="active")
+            raise NoRecordsFound
+        return contacts_list
 
     @staticmethod
     def register(raw_contact) -> dict:
         contact_validated = validator.Contact.to_unpacking_at_base_model(raw_contact=raw_contact)
-        ContactsService._add_contact_id(contact_validated)
-        ContactsService._add_activity_attr(contact_validated)
-        MongoRepository().register_contact(contact_validated)
+        MongoRepository.register_contact(contact_validated)
         return True
 
     @staticmethod
     def update(edited_contact, id):
-        contact_exists = ContactsService.get_by_id(id=id)
+        ContactsService.get_by_id(id=id)
         contact_validated = validator.Contact.to_unpacking_at_base_model(edited_contact)
-        MongoRepository().update_contact(edited_contact=contact_validated, id=id)
+        MongoRepository.update_contact(edited_contact=contact_validated, id=id)
         return True
 
     @staticmethod
     def soft_delete(id):
-        contact_to_delete = ContactsService.get_by_id(id=id)
-        MongoRepository().soft_delete_contact(id=id)
-        contact_to_delete.update(situation="deactivated")
+        ContactsService.get_by_id(id=id)
+        MongoRepository.soft_delete_contact(id=id)
         response = {"message": "Contact successfully deleted"}
         return response
-
-    @staticmethod
-    def _deactivate_activity_attr(contact):
-        if contact["situation"] == "active":
-            contact.update(situation="deactivated")
 
     @staticmethod
     def add_total_contacts_by_type(contacts_list):

@@ -8,41 +8,64 @@ from pymongo.collection import InsertOneResult, UpdateResult
 
 
 class MongoRepository:
-    def __init__(self):
-        self.mongo_client = MongoInfrastructure.get_client()
-        self.database = self.mongo_client.get_database(config("DATABASE_NAME"))
-        self.collection = self.database.get_collection(config("COLLECTION_NAME"))
+    mongo_client = MongoInfrastructure.get_client()
 
-    def get_all_contacts(self) -> Cursor:
+    @classmethod
+    def __get_collection(cls):
+        database = cls.mongo_client.get_database(config("MONGO_DATABASE_NAME"))
+        collection = database.get_collection(config("MONGO_COLLECTION_NAME"))
+        return collection
+
+    def get_all_active_contacts() -> Cursor:
+        collection = MongoRepository.__get_collection()
+        filter_active = {"active": True}
         remove_pymongo_id = {"_id": 0}
-        contacts_cursor = self.collection.find({}, remove_pymongo_id)
+        contacts_cursor = collection.find(filter_active, remove_pymongo_id)
         return contacts_cursor
 
-    def get_contact_by_id(self, id) -> dict:
-        filter_by_id = {"contact_id": id, "situation": "active"}
+    def get_all_contacts() -> Cursor:
+        collection = MongoRepository.__get_collection()
+        filter = {}
         remove_pymongo_id = {"_id": 0}
-        contact = self.collection.find_one(filter_by_id, remove_pymongo_id)
+        contacts_cursor = collection.find(filter, remove_pymongo_id)
+        return contacts_cursor
+
+    def get_contact_by_id(id) -> dict:
+        collection = MongoRepository.__get_collection()
+        filter_by_id = {"contact_id": id, "active": True}
+        remove_pymongo_id = {"_id": 0}
+        contact = collection.find_one(filter_by_id, remove_pymongo_id)
         return contact
 
-    def get_contacts_by_first_letters(self, letters) -> Cursor:
-        regex_first_letters_contact = {"$regex": f"^{letters}", "$options": "i"}
-        filter_by_first_name_letters = {"firstName": regex_first_letters_contact, "situation": "active"}
+    def get_contacts_by_first_letters(letters) -> Cursor:
+        collection = MongoRepository.__get_collection()
+        regex_first_letters_contact = {
+            "$regex": f"^{letters}",
+             "$options": "i"
+             }
+        filter_by_first_name_letters = {
+            "firstName": regex_first_letters_contact,
+             "situation": "active"
+             }
         remove_pymongo_id = {"_id": 0}
-        contacts_cursor = self.collection.find(filter_by_first_name_letters, remove_pymongo_id)
+        contacts_cursor = collection.find(filter_by_first_name_letters, remove_pymongo_id)
         return contacts_cursor
 
-    def register_contact(self, new_contact) -> InsertOneResult:
-        insert_result = self.collection.insert_one(new_contact)
+    def register_contact(new_contact) -> InsertOneResult:
+        collection = MongoRepository.__get_collection()
+        insert_result = collection.insert_one(new_contact)
         return insert_result
 
-    def update_contact(self, edited_contact, id) -> UpdateResult:
+    def update_contact(edited_contact, id) -> UpdateResult:
+        collection = MongoRepository.__get_collection()
         filter_by_id = {"contact_id": id}
         new_values = {"$set": edited_contact}
-        update_result = self.collection.update_one(filter_by_id, new_values)
+        update_result = collection.update_one(filter_by_id, new_values)
         return update_result
 
-    def soft_delete_contact(self, id) -> UpdateResult:
+    def soft_delete_contact(id) -> UpdateResult:
+        collection = MongoRepository.__get_collection()
         filter_by_id = {"contact_id": id}
-        field_to_update = {"$set": {"situation": "deactivated"}}
-        update_result = self.collection.update_one(filter_by_id, field_to_update)
+        field_to_update = {"$set": {"active": False}}
+        update_result = collection.update_one(filter_by_id, field_to_update)
         return update_result

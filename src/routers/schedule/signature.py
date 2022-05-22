@@ -4,6 +4,7 @@ from src.routers.schedule.router import (
     EditContact,
     HelloWord,
     ListAllContacts,
+    ListAllContactsDb,
     ListContactById,
     ListContactsByLetters,
     RegisterContact,
@@ -20,6 +21,7 @@ class RoutesSignature:
         api = Api(app)
         api.add_resource(HelloWord, "/")
         api.add_resource(ListAllContacts, "/contacts")
+        api.add_resource(ListAllContactsDb, "/contacts-db")
         api.add_resource(ListContactsByLetters, "/contacts/<string:letters>")
         api.add_resource(ListContactById, "/contact/<string:id>")
         api.add_resource(RegisterContact, "/register")

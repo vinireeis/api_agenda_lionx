@@ -1,10 +1,11 @@
 # Third party
 from pydantic import BaseModel, Extra, validator
+from decouple import config
 
 # Standards
 from re import MULTILINE, search, sub
 from typing import List, Optional
-
+from uuid import uuid4
 
 class Phone(BaseModel, extra=Extra.forbid):
     number: str
@@ -14,7 +15,13 @@ class Phone(BaseModel, extra=Extra.forbid):
     def validate_number_format(number) -> str:
         regex = r"[\D]"
         subst = ""
-        result_number = sub(regex, subst, number, 0, MULTILINE)
+        result_number = sub(
+            regex,
+            subst,
+            number,
+            int(config("VALIDATE_NUMBER")),
+            MULTILINE
+            )
         if not result_number:
             raise ValueError("Invalid phone number")
         return result_number
@@ -33,6 +40,8 @@ class Contact(BaseModel, extra=Extra.forbid):
     phoneList: List[Phone]
     email: str
     address: Optional[str]
+    contact_id: str = (uuid4())
+    active: bool = True
 
     @validator("email")
     def email_is_true(email) -> str:

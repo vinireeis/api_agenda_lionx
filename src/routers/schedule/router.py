@@ -1,14 +1,10 @@
-# Api Agenda Lionx
-from distutils.log import error
+# Api Agenda
 from http import HTTPStatus
 from src.services.schedule.contacts import ContactsService
 from src.domain.response.model import ResponseBuilder
 
-# Standards
-from json import dumps
-
 # Third party
-from flask import request, Response
+from flask import request
 from flask_restful import Resource
 
 class HelloWord(Resource):
@@ -20,11 +16,32 @@ class HelloWord(Resource):
 
 
 class ListAllContacts(Resource):
-    """EXIBIR TODOS OS CONTATOS"""
+    """EXIBIR TODOS OS CONTATOS ATIVOS"""
 
     def get(self):
         try:
             result = ContactsService.get_all()
+            response = ResponseBuilder.response_http(
+                result=result,
+                success=True,
+                status=HTTPStatus.OK
+                )
+            return response
+        except Exception as ex:
+            error_message = f'message: {str(ex)}'
+            response = ResponseBuilder.response_http(
+                success=False,
+                status=HTTPStatus.FORBIDDEN,
+                message=error_message
+                )
+        return response
+
+
+class ListAllContactsDb(Resource):
+    """EXIBIR TODOS OS CONTATOS NO DB"""
+    def get(self):
+        try:
+            result = ContactsService.get_all_in_db()
             response = ResponseBuilder.response_http(
                 result=result,
                 success=True,

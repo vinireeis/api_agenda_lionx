@@ -9,20 +9,29 @@ from decouple import config
 
 log = getLogger()
 
-def get_all():
-    redis = RedisInfrastructure.get_client()
-    contacts_encoded = redis.get(name=config('REDIS_KEY'))
-    return contacts_encoded
 
-def get_one(id):
-    pass
-
-def set(contacts) -> True:
+class RedisRepository:
     redis = RedisInfrastructure.get_client()
-    try:
-        redis.set(name=config('REDIS_KEY'), value=contacts, ex=3600)
-        return True
-    except Exception as ex:
-        message = 'error on set data'
-        log.error(msg=message, ex=ex)
-        raise ex
+
+    def get_all(cls):
+        key = config('REDIS_KEY')
+        try:
+            contacts_encoded = cls.redis.get(name=key)
+            return contacts_encoded
+        except Exception as ex:
+            msg = 'error on get data'
+            log.error(msg=msg, ex=ex)
+            raise ex
+
+    def get_one(cls, id):
+        pass
+
+    def set(cls, contacts) -> True:
+        ex = int(config("REDIS_EXPIRATION"))
+        key = config('REDIS_KEY')
+        try:
+            cls.redis.set(name=key, value=contacts, ex=ex)
+        except Exception as ex:
+            msg = 'error on set data'
+            log.error(msg=msg, ex=ex)
+            raise ex
