@@ -1,5 +1,8 @@
 # Api Agenda Lionx
+from distutils.log import error
+from http import HTTPStatus
 from src.services.schedule.contacts import ContactsService
+from src.domain.response.model import ResponseBuilder
 
 # Standards
 from json import dumps
@@ -21,16 +24,20 @@ class ListAllContacts(Resource):
 
     def get(self):
         try:
-            response_service = ContactsService.get_all()
-            response = Response(
-                dumps(response_service), mimetype='application/json', status=200
-            )
+            result = ContactsService.get_all()
+            response = ResponseBuilder.response_http(
+                result=result,
+                success=True,
+                status=HTTPStatus.OK
+                )
             return response
         except Exception as ex:
             error_message = f'message: {str(ex)}'
-            response = Response(
-                dumps(error_message), mimetype='application/json', status=403
-            )
+            response = ResponseBuilder.response_http(
+                success=False,
+                status=HTTPStatus.FORBIDDEN,
+                message=error_message
+                )
         return response
 
 
@@ -39,15 +46,18 @@ class ListContactById(Resource):
 
     def get(self, id):
         try:
-            response_service = ContactsService.get_by_id(id)
-            response = Response(
-                dumps(response_service), mimetype='application/json', status=200
-            )
+            result = ContactsService.get_by_id(id)
+            response = ResponseBuilder.response_http(
+                success=True,
+                result=result,
+                status=HTTPStatus.OK
+                )
             return response
         except Exception as error:
             error_message = f'message: {str(error)}'
-            response = Response(
-                dumps(error_message), mimetype='application/json', status=403
+            response = ResponseBuilder.response_http(
+                success=False,
+                message=error_message,
             )
         return response
 
@@ -57,16 +67,20 @@ class ListContactsByLetters(Resource):
 
     def get(self, letters):
         try:
-            response_service = ContactsService.get_by_letters(letters)
-            response = Response(
-                dumps(response_service), mimetype='application/json', status=200
-            )
+            result = ContactsService.get_by_letters(letters)
+            response = ResponseBuilder.response_http(
+                success=True,
+                result=result,
+                status= HTTPStatus.OK
+                )
             return response
         except Exception as error:
             error_message = f'message: {str(error)}'
-            response = Response(
-                dumps(error_message), mimetype='application/json', status=403
-            )
+            response = ResponseBuilder.response_http(
+                success=False,
+                status=HTTPStatus.INTERNAL_SERVER_ERROR,
+                message=error_message
+                )
             return response
 
 
@@ -75,16 +89,20 @@ class RegisterContact(Resource):
 
     def post(self):
         try:
-            new_contact = request.get_json()
-            response_service = ContactsService.register(new_contact)
-            response = Response(
-                dumps(response_service), mimetype='application/json', status=200
+            raw_contact = request.get_json()
+            ContactsService.register(raw_contact)
+            response = ResponseBuilder.response_http(
+                success=True,
+                message="Contact successfully created",
+                status=HTTPStatus.CREATED
             )
             return response
         except Exception as error:
             error_message = f'message: {str(error)}'
-            response =Response(
-                dumps(error_message), mimetype='application/json', status=403
+            response = ResponseBuilder.response_http(
+                message=error_message,
+                success=False,
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
             return response
 
@@ -94,16 +112,20 @@ class EditContact(Resource):
 
     def put(self, id):
         try:
-            contact_to_edit = request.get_json()
-            response_service = ContactsService.update(contact_to_edit, id)
-            response = Response(
-                    dumps(response_service), mimetype='application/json', status=200
-                )
+            raw_contact_update = request.get_json()
+            ContactsService.update(raw_contact_update, id)
+            response = ResponseBuilder.response_http(
+                success=True,
+                message='Contact successfully updated',
+                status=HTTPStatus.OK
+            )
             return response
         except Exception as ex:
             error_message = f'message: {str(ex)}'
-            response = Response(
-                dumps(error_message), mimetype='application/json', status=403
+            response = ResponseBuilder.response_http(
+                success=False,
+                message=error_message,
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
             return response
 
@@ -113,15 +135,18 @@ class SoftDeleteContact(Resource):
 
     def delete(self, id):
         try:
-            response_service = ContactsService.soft_delete(id)
-            response = Response(
-                    dumps(response_service), mimetype='application/json', status=200
-                )
+            ContactsService.soft_delete(id)
+            response = ResponseBuilder.response_http(
+                success=True,
+                message="Contact successfully deleted",
+            )
             return response
         except Exception as ex:
             message = f'message: unexpected error occurred'
-            response = Response(
-                dumps(message), mimetype='application/json', status=500
+            response = ResponseBuilder.response_http(
+                result=False,
+                message=message,
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
             return response
 

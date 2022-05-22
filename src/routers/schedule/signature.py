@@ -1,4 +1,4 @@
-# Api Agenda Lionx
+# Api Agenda
 from src.routers.schedule.router import (
     CountPhonesByType,
     EditContact,

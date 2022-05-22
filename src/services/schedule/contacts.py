@@ -42,21 +42,19 @@ class ContactsService:
         contact_validated.update(situation="active")
 
     @staticmethod
-    def register(new_contact) -> dict:
-        contact_validated = validator.Contact.to_unpacking_at_base_model(contact_json=new_contact)
+    def register(raw_contact) -> dict:
+        contact_validated = validator.Contact.to_unpacking_at_base_model(raw_contact=raw_contact)
         ContactsService._add_contact_id(contact_validated)
         ContactsService._add_activity_attr(contact_validated)
         MongoRepository().register_contact(contact_validated)
-        response = {'message': 'Contact successfully created'}
-        return response
+        return True
 
     @staticmethod
     def update(edited_contact, id):
         contact_exists = ContactsService.get_by_id(id=id)
         contact_validated = validator.Contact.to_unpacking_at_base_model(edited_contact)
         MongoRepository().update_contact(edited_contact=contact_validated, id=id)
-        response = {"message": "Contact successfully updated"}
-        return response
+        return True
 
     @staticmethod
     def soft_delete(id):

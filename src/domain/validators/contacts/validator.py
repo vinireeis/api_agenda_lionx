@@ -47,6 +47,6 @@ class Contact(BaseModel, extra=Extra.forbid):
             raise ValueError("One or more values empty")
         return values
 
-    def to_unpacking_at_base_model(contact_json) -> dict:
-        contact = Contact(**contact_json).dict()
+    def to_unpacking_at_base_model(raw_contact) -> dict:
+        contact = Contact(**raw_contact).dict()
         return contact
