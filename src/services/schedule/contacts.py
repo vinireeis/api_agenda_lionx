@@ -1,4 +1,5 @@
 # Api Agenda Lionx
+from infrastructures.redis.infrastructure import RedisInfrastructure
 from src.domain.exceptions.exceptions import NoRecordsFound
 from src.repositories.mongo.repository import MongoRepository
 from src.repositories.redis.repository import RedisRepository
@@ -16,10 +17,6 @@ class ContactsService:
 
     @staticmethod
     def get_all() -> dict:
-        result = RedisRepository.get_all()
-        if result:
-            contacts_list = eval(result)
-            return contacts_list
         contacts_mongo_object = MongoRepository.get_all_active_contacts()
         contacts_list = ContactsService._to_list(contacts_mongo_object)
         return contacts_list
@@ -32,6 +29,7 @@ class ContactsService:
 
     @staticmethod
     def get_by_id(id) -> dict:
+        RedisRepository.get_by_id(id)
         contact_db = MongoRepository.get_contact_by_id(id)
         if not contact_db:
             raise NoRecordsFound
@@ -48,6 +46,7 @@ class ContactsService:
     @staticmethod
     def register(raw_contact) -> dict:
         contact_validated = validator.Contact.to_unpacking_at_base_model(raw_contact=raw_contact)
+        RedisRepository.set()
         MongoRepository.register_contact(contact_validated)
         return True
 

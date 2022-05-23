@@ -13,25 +13,20 @@ log = getLogger()
 class RedisRepository:
     redis = RedisInfrastructure.get_client()
 
-    def get_all(cls):
-        key = config('REDIS_KEY')
+    def set_if_not_exists(self, key, value) -> bool:
         try:
-            contacts_encoded = cls.redis.get(name=key)
-            return contacts_encoded
+            result = self.redis.setnx(key, value)
+            return result
         except Exception as ex:
-            msg = 'error on get data'
+            msg = 'RedisRepository::setnx::error on set data'
             log.error(msg=msg, ex=ex)
             raise ex
 
-    def get_one(cls, id):
-        pass
-
-    def set(cls, contacts) -> True:
-        ex = int(config("REDIS_EXPIRATION"))
-        key = config('REDIS_KEY')
+    def get_by_id(self, id):
         try:
-            cls.redis.set(name=key, value=contacts, ex=ex)
+            contact_encoded = self.redis.get(id)
+            return contact_encoded
         except Exception as ex:
-            msg = 'error on set data'
+            msg = 'RedisRepository::get_by_id::error on get data'
             log.error(msg=msg, ex=ex)
             raise ex
