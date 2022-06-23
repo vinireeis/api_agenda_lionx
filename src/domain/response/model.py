@@ -1,14 +1,14 @@
 # Standards
-from http import HTTPStatus
 from json import dumps
 from typing import Any
 
 # Third party
 from flask import Response
 
+
 class ResponseBuilder:
     @staticmethod
-    def response_http(success: bool, status: HTTPStatus, message: str = None, result: Any = None):
+    def response_http(success: bool, status: int, message: str = None, result: Any = None) -> Response:
         response_model = {
             "result": result,
             "message": message,

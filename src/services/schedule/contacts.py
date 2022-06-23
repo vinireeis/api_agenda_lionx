@@ -9,7 +9,7 @@ from src.domain.validators.contacts import validator
 class ContactsService:
 
     @staticmethod
-    def _to_list(contacts) -> list:
+    def _to_list(contacts) -> dict:
         contacts_list = {
             "contacts": [contact for contact in contacts]
             }
@@ -44,25 +44,25 @@ class ContactsService:
         return contacts_list
 
     @staticmethod
-    def register(raw_contact) -> dict:
+    def register(raw_contact) -> bool:
         contact_validated = validator.Contact.to_unpacking_at_base_model(raw_contact=raw_contact)
-        RedisRepository.set()
+        RedisRepository.set_if_not_exists()
         MongoRepository.register_contact(contact_validated)
         return True
 
     @staticmethod
-    def update(edited_contact, id):
+    def update(edited_contact, id) -> bool:
         ContactsService.get_by_id(id=id)
         contact_validated = validator.Contact.to_unpacking_at_base_model(edited_contact)
         MongoRepository.update_contact(edited_contact=contact_validated, id=id)
         return True
 
     @staticmethod
-    def soft_delete(id):
+    def soft_delete(id) -> bool:
         ContactsService.get_by_id(id=id)
         MongoRepository.soft_delete_contact(id=id)
-        response = {"message": "Contact successfully deleted"}
-        return response
+        # response = {"message": "Contact successfully deleted"}
+        return True
 
     @staticmethod
     def add_total_contacts_by_type(contacts_list):
@@ -79,9 +79,9 @@ class ContactsService:
             response = {
                 "totals": {
                     "total contacts": total,
-                    "totalCommercial": total_commercial,
-                    "totalMobile": total_mobile,
-                    "totalResidential": total_residential,
+                    "total_commercial": total_commercial,
+                    "total_mobile": total_mobile,
+                    "total_residential": total_residential,
                 }
             }
             return response

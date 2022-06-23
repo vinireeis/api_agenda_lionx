@@ -1,18 +1,20 @@
-# Third party
-from pydantic import BaseModel, Extra, validator
-from decouple import config
-
 # Standards
 from re import MULTILINE, search, sub
 from typing import List, Optional
 from uuid import uuid4
+
+# Third party
+from decouple import config
+from loguru import logger
+from pydantic import BaseModel, Extra, validator
+
 
 class Phone(BaseModel, extra=Extra.forbid):
     number: str
     type: str
 
     @validator("number")
-    def validate_number_format(number) -> str:
+    def validate_number_format(cls, number) -> str:
         regex = r"[\D]"
         subst = ""
         result_number = sub(
@@ -23,14 +25,18 @@ class Phone(BaseModel, extra=Extra.forbid):
             MULTILINE
             )
         if not result_number:
-            raise ValueError("Invalid phone number")
+            msg = "Invalid phone number"
+            logger.info(msg)
+            raise ValueError(msg)
         return result_number
 
     @validator("type")
-    def verify_phone_type(phone_type):
+    def verify_phone_type(cls, phone_type):
         types = ["residential", "commercial", "mobile"]
         if phone_type not in types:
-            raise ValueError("Invalid phone type")
+            msg = "Invalid phone type"
+            logger.info(msg)
+            raise ValueError(msg)
         return phone_type
 
 
@@ -44,18 +50,23 @@ class Contact(BaseModel, extra=Extra.forbid):
     active: bool = True
 
     @validator("email")
-    def email_is_true(email) -> str:
+    def email_is_true(cls, email) -> str:
         regex = r'^[a-z0-9]+[\._-]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
         if not search(regex, email):
-            raise ValueError("Invalid email")
+            msg = "Invalid email"
+            logger.info(msg)
+            raise ValueError(msg)
         return email
 
     @validator("phoneList", "email", "firstName")
-    def verify_values_in_keys(values):
+    def verify_values_in_keys(cls, values):
         if not values:
-            raise ValueError("One or more values empty")
+            msg = "One or more values empty"
+            logger.info(msg)
+            raise ValueError(msg)
         return values
 
+    @staticmethod
     def to_unpacking_at_base_model(raw_contact) -> dict:
         contact = Contact(**raw_contact).dict()
         return contact

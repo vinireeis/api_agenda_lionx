@@ -1,13 +1,8 @@
 # Api Agenda
 from src.infrastructures.redis.infrastructure import RedisInfrastructure
 
-# Standards
-from logging import getLogger
-
 # Third party
-from decouple import config
-
-log = getLogger()
+from loguru import logger
 
 
 class RedisRepository:
@@ -18,8 +13,8 @@ class RedisRepository:
             result = self.redis.setnx(key, value)
             return result
         except Exception as ex:
-            msg = 'RedisRepository::setnx::error on set data'
-            log.error(msg=msg, ex=ex)
+            msg = f'RedisRepository::setnx::error on set data::{ex}'
+            logger.error(msg)
             raise ex
 
     def get_by_id(self, id):
@@ -27,6 +22,6 @@ class RedisRepository:
             contact_encoded = self.redis.get(id)
             return contact_encoded
         except Exception as ex:
-            msg = 'RedisRepository::get_by_id::error on get data'
-            log.error(msg=msg, ex=ex)
+            msg = f'RedisRepository::get_by_id::error on get data::{ex}'
+            logger.error(msg)
             raise ex

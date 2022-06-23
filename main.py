@@ -1,5 +1,5 @@
 # Api Agenda Lionx
-from src.routers.schedule.signature import RoutesSignature
+from src.routers.schedule.routes_signature import RoutesSignature
 from docs.api_specifications import DocsSpecifications
 
 # Third party
